@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storm Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🐕 Storm Tracker</h1>
+    <p>Suivi des promenades et activités</p>
+  </header>
+
+  <main>
+    <!-- TON CODE ICI -->
+    <!-- Section 1 : Formulaire pour ajouter une balade -->
+     <div class="form" id="form_balade">
+        <label for="date_balade">Date:&nbsp;</label>
+        <input class="input_balade" id="date_balade" name="date_balade" type="datetime-local" required placeholder="date de la balade"/>
+        
+
+        <label for="duree_balade">Durée:&nbsp;</label>
+        <input class="input_balade" id="duree_balade" name="duree_balade" type="number" required placeholder="durée de la balade"/>
+        
+
+        <label for="lieu_balade">Lieu:&nbsp;</label>
+        <input class="input_balade" id="lieu_balade" name="lieu_balade" type="text" required placeholder="lieu de la balade"/>
+        
+            <label>Rencontres:</label>
+            <div class="radio_group">
+            <label>
+                <input value="true" name="rencontres_balade" type="radio"/>
+                Oui
+            </label>
+            <label>
+                <input value="false" name="rencontres_balade" type="radio"/>
+                Non
+            </label>
+            </div>
+
+            <div class="si_rencontre hidden">
+            <label>Qui ?</label>
+            <select class="input_balade" id="list_rencontres_balade"  multiple placeholder="chiens rencontrés">
+            </select>
+        
+            <input type="button" value="✚ Ajouter un nouveau chien" class="input_balade"/>
+            </div>
+
+        <label>A fait pipi:</label>
+        <div class="radio_group">
+        <label>
+            <input value="true" name="pipi_balade" type="radio"/>
+            Oui
+        </label>
+        <label>
+            <input value="false" name="pipi_balade" type="radio"/>
+            Non
+        </label>
+        </div>
+
+        <label>A fait caca:</label>
+        <div class="radio_group">
+        <label>
+            <input value="true" name="caca_balade" type="radio"/>
+            Oui
+        </label>
+        <label>
+            <input value="false" name="caca_balade" type="radio"/>
+            Non
+        </label>
+        </div>
+
+        <label for="note_caca_balade">Qualité de la crotte:&nbsp;</label>
+        <input class="input_balade" id="note_caca_balade" name="note_caca_balade" type="number" min="0" max="5" placeholder="/5"/>
+        
+
+        <label for="comment_caca_balade">Commentaire sur la crotte:&nbsp;</label>
+        <input class="input_balade" id="comment_caca_balade" name="comment_caca_balade" type="text" placeholder="consistance, couleur, odeur... fun stuff !"/>
+        
+
+        <label>A mangé pendant la balade:</label>
+        <div class="radio_group">
+        <label>
+            <input value="true" name="nourriture_balade" type="radio"/>
+            Oui
+        </label>
+        <label>
+            <input value="false" name="nourriture_balade" type="radio"/>
+            Non
+        </label>
+        </div>
+
+        <label for="comment_nourriture_balade">Quoi ?&nbsp;</label>
+        <input class="input_balade" id="comment_nourriture_balade" name="comment_nourriture_balade" type="text" placeholder="déchets, crottes, herbe..."/>
+        
+
+        <label for="comment_balade">Commentaire sur la balade&nbsp;</label>
+        <textarea class="input_balade" id="comment_balade" name="comment_balade" placeholder="ressenti, énergie, humeur..."></textarea>
+        
+        
+        <input class="input_balade" type="submit" value="Ajouter la balade"/>
+    </div>
+    <!-- Section 2 : Liste des balades -->
+     <div id="balades_list">
+
+
+
+     </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
