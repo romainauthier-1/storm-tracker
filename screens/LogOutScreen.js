@@ -25,11 +25,11 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 	const handleLogOut = async (humanId) => {
 		try {
 			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/logout/${humanId}`,
+				`${process.env.EXPO_PUBLIC_BACKEND_URL}/humans/logout/${humanId}`,
 				{
-					method: "POST",
+					method: "PATCH",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(humanId),
+					body: JSON.stringify({ humanId }),
 				},
 			);
 			const data = await response.json();
@@ -47,7 +47,7 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>
-				🤙 Hey {user.username ? capitalize(user.username) : "Invité.e"} !
+				🤙 Hey {user.username ? capitalize(user.username) : "Invité.e"}
 			</Text>
 			<Pressable
 				onPress={() => handleLogOut(user.id)}

@@ -1,43 +1,46 @@
 {
-	"expo": {
-		"name": "Storm Tracker",
-		"slug": "storm-tracker",
-		"version": "0.0.0",
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
-		"newArchEnabled": true,
-		"splash": {
-			"image": "./assets/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#33715F"
-		},
-		"ios": {
-			"supportsTablet": true
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#33715F"
-			},
-			"edgeToEdgeEnabled": true
-		},
-		"web": {
-			"favicon": "./assets/favicon.png",
-			"backgroundColor": "#33715F",
-			"themeColor": "#33715F",
-			"config": {
-				"pwa": {
-					"icon": "./assets/icon.png",
-					"appleTouchIcon": "./assets/icon.png"
-				}
-			}
-		},
-		"owner": "dankysten",
-		"extra": {
-			"eas": {
-				"projectId": "ac8f5eea-f7c5-4b3c-b4db-f9682005ea50"
-			}
-		}
-	}
+  "expo": {
+    "name": "Storm Tracker",
+    "slug": "storm-tracker",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#33715F"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#33715F"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "backgroundColor": "#33715F",
+      "themeColor": "#33715F",
+      "config": {
+        "pwa": {
+          "icon": "./assets/icon.png",
+          "appleTouchIcon": "./assets/icon.png"
+        }
+      }
+    },
+    "owner": "dankysten",
+    "extra": {
+      "eas": {
+        "projectId": "ac8f5eea-f7c5-4b3c-b4db-f9682005ea50"
+      }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker"
+    ]
+  }
 }

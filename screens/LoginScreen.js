@@ -74,7 +74,7 @@ export default function LoginScreen() {
 			);
 
 			const data = await response.json();
-			console.log("DATA: ", data);
+			// console.log("DATA: ", data);
 			if (data.result) {
 				dispatch(
 					login({
@@ -119,6 +119,7 @@ export default function LoginScreen() {
 						id: data.savedUser.id,
 						username: data.savedUser.username,
 						subscription: data.savedUser.subscription ? true : false,
+						dogs: data.savedUser.dogs || [],
 					}),
 				);
 				setUsername(null);

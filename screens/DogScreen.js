@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
 import { Plus } from "lucide-react-native";
 import DogCard from "../components/DogCard";
-import { fullCaps } from "../utils";
+import FormModal from "../components/FormModal";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -25,6 +25,7 @@ const screenWidth = Dimensions.get("window").width;
 export default function DogScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
+	const [isAddingDog, setIsAddingDog] = useState(false);
 	const user = useSelector((state) => state.user);
 	const dogs = useSelector((state) => state.user.dogs) || [];
 
@@ -32,25 +33,44 @@ export default function DogScreen() {
 
 	return (
 		<KeyboardAvoidingView style={styles.container}>
-			<Text style={styles.title}>
-				🐶{" "}
-				{dogs.length > 1
-					? "Mes poilus"
-					: dogs.length === 0
-						? "Aucun poilu"
-						: "Mon poilu"}{" "}
-				{} 🐶
-			</Text>
+			{!isAddingDog && (
+				<>
+					<Text style={styles.title}>
+						🐶{" "}
+						{dogs.length > 1
+							? "Mes poilus"
+							: dogs.length === 0
+								? "Aucun poilu"
+								: "Mon poilu"}{" "}
+						{} 🐶
+					</Text>
+					<Text style={styles.title}>
+						{dogs.length === 0 && "pour le moment"}
+					</Text>
+				</>
+			)}
 
 			<View style={styles.dogsContainer}>{dogsToDisplay}</View>
-			<Pressable
-				style={({ pressed }) => [
-					styles.addBtn,
-					pressed && styles.addBtnPressed,
-				]}
-			>
-				<Plus color={colors.darkWhite} size={25} />
-			</Pressable>
+			{isAddingDog && (
+				<FormModal
+					type="addingDog"
+					isVisible={isAddingDog}
+					onClose={() => {
+						setIsAddingDog(false);
+					}}
+				/>
+			)}
+			{!isAddingDog && (
+				<Pressable
+					style={({ pressed }) => [
+						styles.addBtn,
+						pressed && styles.addBtnPressed,
+					]}
+					onPress={() => setIsAddingDog(true)}
+				>
+					<Plus color={colors.darkWhite} size={25} />
+				</Pressable>
+			)}
 		</KeyboardAvoidingView>
 	);
 }
@@ -62,6 +82,8 @@ const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		flex: 1,
 		backgroundColor: colors.background,
+		paddingTop: 30,
+		paddingBottom: 40,
 	},
 	title: {
 		fontSize: 30,

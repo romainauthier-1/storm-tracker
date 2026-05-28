@@ -46,9 +46,7 @@ export default function WelcomeScreen() {
 	};
 
 	useEffect(() => {
-		if (dogs.length === 0) {
-			getDogs(user.id);
-		}
+		getDogs(user.id);
 	}, [isFocused, dogs]);
 
 	return (

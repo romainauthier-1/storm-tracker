@@ -31,8 +31,12 @@ const userSlice = createSlice({
 		setDogs: (state, action) => {
 			state.dogs = action.payload;
 		},
+		addDog: (state, action) => {
+			state.dogs.push(action.payload);
+		},
 	},
 });
 
-export const { login, logout, activateNotif, setDogs } = userSlice.actions;
+export const { login, logout, activateNotif, setDogs, addDog } =
+	userSlice.actions;
 export default userSlice.reducer;
