@@ -42,7 +42,7 @@ const Stack = createNativeStackNavigator();
 
 const HomeTabs = ({ onActivatePush }) => {
 	const user = useSelector((state) => state.user);
-	const dogs = useSelector((state) => state.user.dogs);
+	const dogs = useSelector((state) => state.user.dogs) || [];
 
 	return (
 		<Tab.Navigator

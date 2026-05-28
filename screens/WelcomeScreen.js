@@ -24,7 +24,7 @@ export default function WelcomeScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
-	const dogs = useSelector((state) => state.user.dogs);
+	const dogs = useSelector((state) => state.user.dogs) || [];
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 

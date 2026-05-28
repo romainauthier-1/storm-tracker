@@ -14,6 +14,14 @@ export function minimize(string) {
 	return string[0] + string.slice(1).toLowerCase();
 }
 
+export function fullCaps(string) {
+	if (typeof string !== "string" || string.length === 0) {
+		return string;
+	}
+
+	return string.toUpperCase();
+}
+
 export const colors = {
 	primary: "#33715F",
 	secondary: "#4FB064",

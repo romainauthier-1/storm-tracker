@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
 import { Plus } from "lucide-react-native";
 import DogCard from "../components/DogCard";
+import { fullCaps } from "../utils";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -25,14 +26,20 @@ export default function DogScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
-	const dogs = useSelector((state) => state.user.dogs);
+	const dogs = useSelector((state) => state.user.dogs) || [];
 
 	const dogsToDisplay = dogs.map((dog) => <DogCard dog={dog} key={dog.id} />);
 
 	return (
 		<KeyboardAvoidingView style={styles.container}>
 			<Text style={styles.title}>
-				🐶 {dogs.length > 1 ? "Mes poilus" : "Mon poilu"} 🐶
+				🐶{" "}
+				{dogs.length > 1
+					? "Mes poilus"
+					: dogs.length === 0
+						? "Aucun poilu"
+						: "Mon poilu"}{" "}
+				{} 🐶
 			</Text>
 
 			<View style={styles.dogsContainer}>{dogsToDisplay}</View>
@@ -61,6 +68,7 @@ const styles = StyleSheet.create({
 		color: colors.darkWhite,
 		fontWeight: "bold",
 		letterSpacing: 2,
+		textAlign: "center",
 	},
 	addBtn: {
 		backgroundColor: colors.primary,
