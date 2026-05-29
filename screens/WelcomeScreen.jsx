@@ -15,7 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
-import { setDogs } from "../reducers/user";
+import { setDogs, setWalks } from "../reducers/user";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -24,7 +24,8 @@ export default function WelcomeScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
-	const dogs = useSelector((state) => state.user.dogs) || [];
+	const dogs = user.dogs || [];
+	const walks = user.walks || [];
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 
@@ -38,16 +39,19 @@ export default function WelcomeScreen() {
 
 			if (data.result) {
 				dispatch(setDogs(data.dogs));
+				console.log("CHIENS REÇUS : ", data.dogs);
 			}
 		} catch (err) {
 			console.error(err);
 			setErrorMessage(err.message);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		getDogs(user.id);
-	}, [isFocused, dogs]);
+	}, [isFocused]);
 
 	return (
 		<View style={styles.container}>

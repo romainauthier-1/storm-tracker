@@ -6,6 +6,7 @@ const initialState = {
 	dogs: [],
 	isConnected: false,
 	notifActivated: false,
+	walks: [],
 };
 
 const userSlice = createSlice({
@@ -34,9 +35,22 @@ const userSlice = createSlice({
 		addDog: (state, action) => {
 			state.dogs.push(action.payload);
 		},
+		setWalks: (state, action) => {
+			state.walks = action.payload;
+		},
+		addWalk: (state, action) => {
+			state.walks.push(action.payload);
+		},
 	},
 });
 
-export const { login, logout, activateNotif, setDogs, addDog } =
-	userSlice.actions;
+export const {
+	login,
+	logout,
+	activateNotif,
+	setDogs,
+	addDog,
+	setWalks,
+	addWalk,
+} = userSlice.actions;
 export default userSlice.reducer;

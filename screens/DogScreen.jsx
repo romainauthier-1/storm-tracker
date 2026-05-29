@@ -27,7 +27,7 @@ export default function DogScreen() {
 	const isFocused = useIsFocused();
 	const [isAddingDog, setIsAddingDog] = useState(false);
 	const user = useSelector((state) => state.user);
-	const dogs = useSelector((state) => state.user.dogs) || [];
+	const dogs = user?.dogs || [];
 
 	const dogsToDisplay = dogs.map((dog) => <DogCard dog={dog} key={dog.id} />);
 
@@ -51,15 +51,13 @@ export default function DogScreen() {
 			)}
 
 			<View style={styles.dogsContainer}>{dogsToDisplay}</View>
-			{isAddingDog && (
-				<FormModal
-					type="addingDog"
-					isVisible={isAddingDog}
-					onClose={() => {
-						setIsAddingDog(false);
-					}}
-				/>
-			)}
+			<FormModal
+				type="addingDog"
+				isVisible={isAddingDog}
+				onClose={() => {
+					setIsAddingDog(false);
+				}}
+			/>
 			{!isAddingDog && (
 				<Pressable
 					style={({ pressed }) => [

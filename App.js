@@ -15,6 +15,7 @@ import {
 	HeartHandshake,
 	SquareArrowRightExit,
 	PawPrint,
+	Footprints,
 } from "lucide-react-native";
 import { colors } from "./utils";
 
@@ -36,6 +37,7 @@ import LoginScreen from "./screens/LoginScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import LogOutScreen from "./screens/LogOutScreen";
 import DogScreen from "./screens/DogScreen";
+import WalkScreen from "./screens/WalkScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -52,7 +54,11 @@ const HomeTabs = ({ onActivatePush }) => {
 					height: 60,
 					position: "absolute",
 					borderTopWidth: 0,
-					elevation: 0,
+					shadowColor: "#000",
+					shadowOffset: { width: 5, height: 4 },
+					shadowOpacity: 0.2,
+					shadowRadius: 8,
+					elevation: 8,
 					marginHorizontal: 30,
 					borderRadius: 25,
 					marginBottom: 10,
@@ -87,6 +93,25 @@ const HomeTabs = ({ onActivatePush }) => {
 				options={{
 					tabBarIcon: ({ focused, color, size }) => (
 						<PawPrint
+							size={focused ? 30 : 20}
+							color={focused ? colors.lightGray : colors.primary}
+						/>
+					),
+					tabBarActiveTintColor: colors.lightGray,
+					tabBarInactiveTintColor: colors.primary,
+					tabBarLabelStyle: {
+						fontSize: 12,
+						fontWeight: "bold",
+						marginBottom: 5,
+					},
+				}}
+			/>
+			<Tab.Screen
+				name="Balades"
+				component={WalkScreen}
+				options={{
+					tabBarIcon: ({ focused, color, size }) => (
+						<Footprints
 							size={focused ? 30 : 20}
 							color={focused ? colors.lightGray : colors.primary}
 						/>

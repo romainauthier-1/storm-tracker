@@ -12,38 +12,52 @@ import { useIsFocused } from "@react-navigation/native";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { colors, minimize } from "../utils";
+import { colors } from "../utils";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-export default function DogCard({ dog }) {
+export default function WalkCard({ walk }) {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
+	const dogs = user.dogs;
 
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	const dateOptions = {
+		weekDay: "long",
 		day: "numeric",
 		year: "numeric",
 		month: "long",
 		timeZone: userTimeZone,
 	};
 
+	const meetingsDisplay = walk.meetings?.map((metDog, i) => {
+		return (
+			<View key={i}>
+				<Text>Qui : {metDog.dog}</Text>
+				<Text>Réaction : {metDog.reaction}</Text>
+			</View>
+		);
+	});
 	return (
 		<View style={styles.card}>
-			<Text style={styles.title}>{dog.name}</Text>
+			<Text style={styles.title}>
+				{new Date(walk.date).toLocaleString("fr-FR", dateOptions)} à {walk.time}
+			</Text>
+			<Text style={styles.description}>Durée : {walk.duration} minutes</Text>
+			{walk.meetings && (
+				<Text style={styles.description}>{walk.meetingsDisplay}</Text>
+			)}
 			<Text style={styles.description}>
-				{dog.gender === "MALE" ? `Mâle` : `Femelle`}
+				A fait pipi : {walk.peed ? "Oui" : "Non"}
 			</Text>
 			<Text style={styles.description}>
-				{dog.race2 ? `Croisé ${dog.race1} / ${dog.race2}` : dog.race1}
+				A fait caca : {walk.pooped ? "Oui" : "Non"}
 			</Text>
 			<Text style={styles.description}>
-				{dog.gender === "MALE"
-					? `Né le ${new Date(dog.birth_date).toLocaleDateString("fr-FR", dateOptions)}`
-					: `Née le ${new Date(dog.birth_date).toLocaleDateString("fr-FR", dateOptions)}`}
+				Notes : {walk.notes ? walk.notes : "Aucune note"}
 			</Text>
 		</View>
 	);
