@@ -50,7 +50,13 @@ export default function DogScreen() {
 				</>
 			)}
 
-			<View style={styles.dogsContainer}>{dogsToDisplay}</View>
+			<ScrollView
+				style={{ flex: 1 }}
+				contentContainerStyle={styles.dogContainer}
+				showVerticalScrollIndicator={false}
+			>
+				{dogsToDisplay}
+			</ScrollView>
 			<FormModal
 				type="addingDog"
 				isVisible={isAddingDog}
@@ -100,7 +106,12 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 12,
 		elevation: 8,
-		padding: 15,
+		padding: 10,
+		position: "absolute",
+		bottom: 80,
+		left: "50%",
+		transform: [{ translateX: -25 }],
+		zIndex: 100,
 	},
 	addBtnPressed: {
 		backgroundColor: colors.secondary,
@@ -112,6 +123,11 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 12,
 		elevation: 8,
-		padding: 15,
+		padding: 10,
+		position: "absolute",
+		bottom: 80,
+		left: "50%",
+		transform: [{ translateX: -25 }],
+		zIndex: 100,
 	},
 });

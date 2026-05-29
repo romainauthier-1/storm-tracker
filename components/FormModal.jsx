@@ -162,7 +162,7 @@ export default function FormModal({ type, isVisible, onClose }) {
 		return (
 			<Pressable
 				key={i}
-				onPress={() => setDogId(dog.id)}
+				onPress={() => (dogId !== dog.id ? setDogId(dog.id) : setDogId(""))}
 				style={() =>
 					dogId === dog.id ? styles.selectedBtn : styles.unselectedBtn
 				}
@@ -224,7 +224,7 @@ export default function FormModal({ type, isVisible, onClose }) {
 			const data = await response.json();
 
 			if (data.result) {
-				console.log("RETOUR ADD WALK : ", data.savedWalk);
+				// console.log("RETOUR ADD WALK : ", data.savedWalk);
 				showMessage({
 					message: data.message,
 					type: "success",
@@ -328,9 +328,10 @@ export default function FormModal({ type, isVisible, onClose }) {
 								value={walkTime}
 								onChange={(event, time) => setWalkTime(time)}
 							></DateTimePicker>
-							<Text style={styles.label}>Durée</Text>
 							<TextInput
-								type="numeric"
+								placeholder="Durée (minutes)"
+								inputMode="numeric"
+								returnKeyType="next"
 								style={styles.input}
 								step={5}
 								value={walkDuration}

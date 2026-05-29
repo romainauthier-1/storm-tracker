@@ -44,7 +44,7 @@ export default function WalkScreen() {
 
 			if (data.result) {
 				dispatch(setWalks(data.allWalks));
-				console.log("BALADES REÇUES : ", data.allWalks);
+				// console.log("BALADES REÇUES : ", data.allWalks);
 			}
 		} catch (err) {
 			console.error(err);
@@ -63,28 +63,38 @@ export default function WalkScreen() {
 
 	return (
 		<View style={styles.container}>
-			<FormModal
-				type="addingWalk"
-				isVisible={isAddingWalk}
-				onClose={() => {
-					setIsAddingWalk(false);
-				}}
-			/>
-			{!isAddingWalk && (
-				<ScrollView contentContainerStyle={styles.cardContainer}>
-					{walksDisplay}
-				</ScrollView>
-			)}
-			{!isAddingWalk && (
-				<Pressable
-					style={({ pressed }) => [
-						styles.addBtn,
-						pressed && styles.addBtnPressed,
-					]}
-					onPress={() => setIsAddingWalk(true)}
-				>
-					<Plus color={colors.darkWhite} size={25} />
-				</Pressable>
+			{isLoading ? (
+				<ActivityIndicator size="small" color={colors.darkWhite} />
+			) : (
+				<>
+					<FormModal
+						type="addingWalk"
+						isVisible={isAddingWalk}
+						onClose={() => {
+							setIsAddingWalk(false);
+						}}
+					/>
+					{!isAddingWalk && (
+						<ScrollView
+							style={{ flex: 1 }}
+							contentContainerStyle={styles.cardContainer}
+							showVerticalScrollIndicator={false}
+						>
+							{walksDisplay}
+						</ScrollView>
+					)}
+					{!isAddingWalk && (
+						<Pressable
+							style={({ pressed }) => [
+								styles.addBtn,
+								pressed && styles.addBtnPressed,
+							]}
+							onPress={() => setIsAddingWalk(true)}
+						>
+							<Plus color={colors.darkWhite} size={25} />
+						</Pressable>
+					)}
+				</>
 			)}
 		</View>
 	);
@@ -101,7 +111,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 40,
 	},
 	cardContainer: {
-		flex: 1,
+		paddingBottom: 10,
 	},
 	addBtn: {
 		backgroundColor: colors.primary,
@@ -113,7 +123,12 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 12,
 		elevation: 8,
-		padding: 15,
+		padding: 10,
+		position: "absolute",
+		bottom: 80,
+		left: "50%",
+		transform: [{ translateX: -25 }],
+		zIndex: 100,
 	},
 	addBtnPressed: {
 		backgroundColor: colors.secondary,
@@ -125,6 +140,11 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 12,
 		elevation: 8,
-		padding: 15,
+		padding: 10,
+		position: "absolute",
+		bottom: 80,
+		left: "50%",
+		transform: [{ translateX: -25 }],
+		zIndex: 100,
 	},
 });
