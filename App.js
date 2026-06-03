@@ -192,11 +192,11 @@ export default function App({ navigation }) {
 	return (
 		<Provider store={store}>
 			<SafeAreaProvider>
-				<PersistGate persistor={persistor}>
-					<NavigationContainer theme={MyTheme}>
-						<AppNavigation />
-					</NavigationContainer>
-				</PersistGate>
+				{/* <PersistGate persistor={persistor}> */}
+				<NavigationContainer theme={MyTheme}>
+					<AppNavigation />
+				</NavigationContainer>
+				{/* </PersistGate> */}
 				<StatusBar style="light" />
 				<FlashMessage position="top" />
 			</SafeAreaProvider>
