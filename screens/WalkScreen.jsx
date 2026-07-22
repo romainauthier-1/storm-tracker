@@ -38,13 +38,13 @@ export default function WalkScreen() {
 
 		try {
 			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/walks`,
+				`${process.env.EXPO_PUBLIC_BACKEND_URL}/walks/${humanId}`,
 			);
 			const data = await response.json();
 
 			if (data.result) {
 				dispatch(setWalks(data.allWalks));
-				// console.log("BALADES REÇUES : ", data.allWalks);
+				console.log("BALADES REÇUES : ", data.allWalks);
 			}
 		} catch (err) {
 			console.error(err);
@@ -63,6 +63,11 @@ export default function WalkScreen() {
 
 	return (
 		<View style={styles.container}>
+			{walks.length === 0 && (
+				<>
+					<Text style={styles.title}>👣 Aucune balade pour le moment 👣</Text>
+				</>
+			)}
 			{isLoading ? (
 				<ActivityIndicator size="small" color={colors.darkWhite} />
 			) : (
@@ -146,5 +151,12 @@ const styles = StyleSheet.create({
 		left: "50%",
 		transform: [{ translateX: -25 }],
 		zIndex: 100,
+	},
+	title: {
+		fontSize: 30,
+		color: colors.darkWhite,
+		fontWeight: "bold",
+		letterSpacing: 2,
+		textAlign: "center",
 	},
 });

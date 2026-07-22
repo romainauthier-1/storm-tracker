@@ -29,7 +29,7 @@ export default function DogScreen() {
 	const user = useSelector((state) => state.user);
 	const dogs = user?.dogs || [];
 
-	const dogsToDisplay = dogs.map((dog) => <DogCard dog={dog} key={dog.id} />);
+	const dogsToDisplay = dogs.map((dog) => <DogCard dog={dog} key={dog?.id} />);
 
 	return (
 		<KeyboardAvoidingView style={styles.container}>

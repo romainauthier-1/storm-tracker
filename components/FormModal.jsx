@@ -122,7 +122,7 @@ export default function FormModal({ type, isVisible, onClose }) {
 	};
 
 	// AJOUT BALADE
-	const [dogId, setDogId] = useState([dogs[0].id]);
+	const [dogId, setDogId] = useState([dogs[0]?.id]);
 	const [walkDate, setWalkDate] = useState(new Date());
 	const [walkTime, setWalkTime] = useState(new Date());
 	const [walkDuration, setWalkDuration] = useState(20);
