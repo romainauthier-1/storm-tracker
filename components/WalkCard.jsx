@@ -1,29 +1,9 @@
-import {
-	View,
-	ScrollView,
-	Text,
-	StyleSheet,
-	TextInput,
-	Dimensions,
-	Pressable,
-	KeyboardAvoidingView,
-} from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { colors } from "../utils";
-import { Droplet, Shell } from "lucide-react-native";
 
-const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
 export default function WalkCard({ walk }) {
-	const dispatch = useDispatch();
-	const isFocused = useIsFocused();
-	const user = useSelector((state) => state.user);
-	const dogs = user.dogs;
-
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	const dateOptions = {
@@ -55,10 +35,8 @@ export default function WalkCard({ walk }) {
 	);
 
 	const timeToDisplay = walk.time
-		.split(".")[0]
-		.split(":")
-		.toSpliced(2)
-		.join("h");
+		? walk.time.split(".")[0].split(":").slice(0, 2).join("h")
+		: "";
 	return (
 		<View style={styles.card}>
 			<Text style={styles.dogBadge}>{walk.dog_name}</Text>
@@ -70,10 +48,35 @@ export default function WalkCard({ walk }) {
 				<Text style={styles.description}>{meetingsDisplay}</Text>
 			)}
 			<Text style={styles.description}>
-				💦 {walk.peed ? "Oui" : "Non"} | 💩 {walk.pooped ? "Oui" : "Non"}
+				{walk.peed ? "💦" : "Pas de pipi"} |{" "}
+				{walk.pooped ? "💩" : "Pas de caca"}
+			</Text>
+			<Text style={styles.description}>
+				Humeur du chien :{" "}
+				{walk.dog_mood?.length > 0
+					? walk.dog_mood.map((mood) => mood).join(", ")
+					: "RAS ✅"}
+			</Text>
+			<Text style={styles.description}>
+				Humeur de l'humain :{" "}
+				{walk.human_mood?.length > 0
+					? walk.human_mood.map((mood) => mood).join(", ")
+					: "RAS ✅"}
+			</Text>
+			<Text style={styles.description}>
+				Autres infos :{" "}
+				{walk.other?.length > 0
+					? walk.other.map((other) => other).join(", ")
+					: "RAS ✅"}
+			</Text>
+			<Text style={styles.description}>
+				Coprophagie :{" "}
+				{walk.coprophagie > 0 ? `${walk.coprophagie} fois` : "RAS ✅"}
 			</Text>
 			{walk.notes && (
-				<Text style={styles.description}>Notes : {walk.notes}</Text>
+				<Text style={styles.description}>
+					Notes : {walk.notes ? walk.notes : "RAS ✅"}
+				</Text>
 			)}
 		</View>
 	);

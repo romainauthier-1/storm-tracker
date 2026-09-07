@@ -7,14 +7,15 @@ import {
 	Dimensions,
 	Pressable,
 	KeyboardAvoidingView,
+	ActivityIndicator,
+	Platform,
 	Modal,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { colors, fullCaps } from "../utils";
+import { colors, toLocalDateString, toLocalTimeString } from "../utils";
 import { XCircle } from "lucide-react-native";
 import { addDog, addWalk } from "../reducers/user";
 
@@ -23,7 +24,6 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function FormModal({ type, isVisible, onClose }) {
 	const dispatch = useDispatch();
-	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
 	const dogs = user.dogs;
 
@@ -35,14 +35,6 @@ export default function FormModal({ type, isVisible, onClose }) {
 	const [dogRace1, setDogRace1] = useState("");
 	const [dogRace2, setDogRace2] = useState("");
 	const [dogGender, setDogGender] = useState("");
-
-	const resetDogInputs = () => {
-		setDogName("");
-		setDogBirth(new Date());
-		setDogRace1("");
-		setDogRace2("");
-		setDogGender("");
-	};
 
 	const possibleGenders = ["Mâle", "Femelle", "Inconnu"];
 
@@ -94,7 +86,7 @@ export default function FormModal({ type, isVisible, onClose }) {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
 						name: dogName,
-						birth_date: dogBirth.toISOString().split("T")[0],
+						birth_date: toLocalDateString(dogBirth),
 						race1: dogRace1,
 						race2: dogRace2,
 						gender,
@@ -129,6 +121,53 @@ export default function FormModal({ type, isVisible, onClose }) {
 	const [peed, setPeed] = useState(false);
 	const [pooped, setPooped] = useState(false);
 	const [notes, setNotes] = useState("");
+	const [dogMood, setDogMood] = useState([]);
+	const [humanMood, setHumanMood] = useState([]);
+	const [other, setOther] = useState([]);
+	const [coprophagie, setCoprophagie] = useState("");
+
+	const [dogMoodVisible, setDogMoodVisible] = useState(false);
+	const [humanMoodVisible, setHumanMoodVisible] = useState(false);
+	const [otherVisible, setOtherVisible] = useState(false);
+	const [coprophagieVisible, setCoprophagieVisible] = useState(false);
+
+	const dogMoodOptions = [
+		"Flemme",
+		"Joyeux",
+		"Excité",
+		"Stressé",
+		"Fatigué",
+		"Sociable",
+		"Attentif",
+		"Distrait",
+		"Vigilant",
+		"Tranquille",
+		"Dynamique",
+	];
+	const humanMoodOptions = [
+		"Flemme",
+		"Triste",
+		"Pressé",
+		"Agacé",
+		"Fatigué",
+		"Normal",
+		"En forme",
+		"Motivé",
+		"Bonne composition",
+	];
+	const otherOptions = [
+		"Accident urine",
+		"Accident selles",
+		"Accident selles + urine",
+		"Destruction",
+		"Vomi",
+		"Selles molles",
+		"Diarrhée",
+		"Glaires dans les selles",
+		"A mangé (non identifié)",
+		"A mangé (identifié)",
+	];
+	const coprophagieOptions = [0, 1, 2, 3, 4];
 
 	const resetWalkInputs = () => {
 		setDogId([dogs[0].id]);
@@ -138,25 +177,11 @@ export default function FormModal({ type, isVisible, onClose }) {
 		setPeed(false);
 		setPooped(false);
 		setNotes("");
+		setDogMood([]);
+		setHumanMood([]);
+		setOther([]);
+		setCoprophagie("");
 	};
-
-	// PLUSIEURS CHIENS TOGGLE + USEEFFECT
-	// const toggleDogs = dogs.map((dog, i) => {
-	// 	return (
-	// 		<Pressable
-	// 			key={i}
-	// 			onPress={() => setDogId((prev) => [...prev, dog.id])}
-	// 			style={() =>
-	// 				dogId.includes(dog.id) ? styles.selectedBtn : styles.unselectedBtn
-	// 			}
-	// 		>
-	// 			<Text style={styles.btnText}>{dog.name}</Text>
-	// 		</Pressable>
-	// 	);
-	// });
-	// useEffect(() => {
-	// 		dogs.map((dog) => setDogId((prev) => [...prev, dog.id]));
-	// 	}, [isFocused]);
 
 	const toggleDogs = dogs.map((dog, i) => {
 		return (
@@ -172,8 +197,99 @@ export default function FormModal({ type, isVisible, onClose }) {
 		);
 	});
 
-	const needs = ["Pipi", "Caca"];
+	const toggleDogMood = dogMoodOptions.map((mood, i) => {
+		return (
+			<Pressable
+				key={i}
+				onPress={() =>
+					dogMood.includes(mood)
+						? setDogMood((prev) =>
+								prev.filter((moodValue) => moodValue !== mood),
+							)
+						: setDogMood((prev) => [...prev, mood])
+				}
+				style={() =>
+					dogMood.includes(mood) ? styles.selectedBtn : styles.unselectedBtn
+				}
+			>
+				<Text style={styles.btnText}>{mood}</Text>
+			</Pressable>
+		);
+	});
 
+	const toggleHumanMood = humanMoodOptions.map((mood, i) => {
+		return (
+			<Pressable
+				key={i}
+				onPress={() =>
+					humanMood.includes(mood)
+						? setHumanMood((prev) =>
+								prev.filter((moodValue) => moodValue !== mood),
+							)
+						: setHumanMood((prev) => [...prev, mood])
+				}
+				style={() =>
+					humanMood.includes(mood) ? styles.selectedBtn : styles.unselectedBtn
+				}
+			>
+				<Text style={styles.btnText}>{mood}</Text>
+			</Pressable>
+		);
+	});
+
+	const toggleOther = otherOptions.map((otherOption, i) => {
+		return (
+			<Pressable
+				key={i}
+				onPress={() =>
+					other.includes(otherOption)
+						? setOther((prev) =>
+								prev.filter((option) => option !== otherOption),
+							)
+						: setOther((prev) => [...prev, otherOption])
+				}
+				style={() =>
+					other.includes(otherOption)
+						? styles.selectedBtn
+						: styles.unselectedBtn
+				}
+			>
+				<Text style={styles.btnText}>{otherOption}</Text>
+			</Pressable>
+		);
+	});
+
+	const toggleCoprophagie = coprophagieOptions.map((option, i) => {
+		const displayOption = () => {
+			switch (option) {
+				case 0:
+					return "Non";
+				case 1:
+					return "1 fois";
+				case 2:
+					return "2 fois";
+				case 3:
+					return "3 fois";
+				case 4:
+					return "4 fois ou +";
+				default:
+					return option;
+			}
+		};
+		return (
+			<Pressable
+				key={i}
+				onPress={() => setCoprophagie(option)}
+				style={() =>
+					coprophagie === option ? styles.selectedBtn : styles.unselectedBtn
+				}
+			>
+				<Text style={styles.btnText}>{displayOption()}</Text>
+			</Pressable>
+		);
+	});
+
+	const needs = ["Pipi", "Caca"];
 	const toggleNeeds = needs.map((need, i) => {
 		return (
 			<Pressable
@@ -190,6 +306,75 @@ export default function FormModal({ type, isVisible, onClose }) {
 		);
 	});
 
+	const modalConfig = [
+		{
+			key: "dogMood",
+			label: "Humeur du poilu",
+			visible: dogMoodVisible,
+			setVisible: setDogMoodVisible,
+			options: toggleDogMood,
+		},
+		{
+			key: "humanMood",
+			label: "Humeur de l'humain",
+			visible: humanMoodVisible,
+			setVisible: setHumanMoodVisible,
+			options: toggleHumanMood,
+		},
+		{
+			key: "other",
+			label: "Autres infos",
+			visible: otherVisible,
+			setVisible: setOtherVisible,
+			options: toggleOther,
+		},
+		{
+			key: "coprophagie",
+			label: "Coprophagie",
+			visible: coprophagieVisible,
+			setVisible: setCoprophagieVisible,
+			options: toggleCoprophagie,
+		},
+	];
+
+	const allModals = () =>
+		modalConfig.map(({ key, label, visible, setVisible, options }) => (
+			<View key={key} style={styles.modalRow}>
+				<Pressable style={styles.outlineBtn} onPress={() => setVisible(true)}>
+					<Text style={{ color: colors.primary }}>{label}</Text>
+				</Pressable>
+				<Modal
+					animationType="fade"
+					transparent={false}
+					visible={visible}
+					onRequestClose={() => setVisible(false)}
+					style={{
+						borderRadius: 15,
+						width: screenWidth * 0.8,
+						maxHeight: screenHeight * 0.6,
+						marginVertical: "auto",
+						alignSelf: "center",
+					}}
+				>
+					<View style={styles.optionSheet}>
+						<XCircle
+							size={30}
+							color={colors.destructive}
+							onPress={() => setVisible(false)}
+							style={{ alignSelf: "flex-end" }}
+						/>
+						<Text style={styles.title}>{label}</Text>
+						<ScrollView
+							contentContainerStyle={styles.optionSheetContent}
+							showsVerticalScrollIndicator={false}
+						>
+							{options}
+						</ScrollView>
+					</View>
+				</Modal>
+			</View>
+		));
+
 	const handleAddingWalk = async (
 		dogId,
 		walkDate,
@@ -199,6 +384,10 @@ export default function FormModal({ type, isVisible, onClose }) {
 		pooped,
 		notes,
 		humanId,
+		dogMood,
+		humanMood,
+		other,
+		coprophagie,
 	) => {
 		setIsLoading(true);
 
@@ -210,13 +399,17 @@ export default function FormModal({ type, isVisible, onClose }) {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
 						walked_dog: dogId,
-						date: walkDate.toISOString().split("T")[0],
-						time: walkTime.toISOString().split("T")[1],
+						date: toLocalDateString(walkDate),
+						time: toLocalTimeString(walkTime),
 						duration: walkDuration,
 						peed,
 						pooped,
 						notes,
 						walking_human: humanId,
+						dog_mood: dogMood,
+						human_mood: humanMood,
+						other,
+						coprophagie: coprophagie === "" ? null : coprophagie,
 					}),
 				},
 			);
@@ -241,144 +434,187 @@ export default function FormModal({ type, isVisible, onClose }) {
 	};
 
 	return (
-		<Modal animationType="slide" transparent={true} visible={isVisible}>
-			<View style={styles.centeredView}>
-				<View style={styles.card}>
-					<View style={styles.header}>
-						<View></View>
-						<Text style={styles.title}>
-							{type === "addingDog"
-								? "Ajouter un poilu"
-								: type === "addingWalk"
-									? "Ajouter une balade"
-									: "-"}
-						</Text>
-						<Pressable onPress={onClose}>
-							<XCircle size={30} color={colors.primary} />
-						</Pressable>
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={isVisible}
+			onRequestClose={onClose}
+		>
+			<KeyboardAvoidingView
+				style={styles.flex}
+				behavior={Platform.OS === "ios" ? "padding" : undefined}
+			>
+				<ScrollView
+					style={styles.flex}
+					contentContainerStyle={styles.scrollContent}
+					keyboardShouldPersistTaps="handled"
+					showsVerticalScrollIndicator={false}
+				>
+					<View style={styles.card}>
+						<View style={styles.header}>
+							<View></View>
+							<Text style={styles.title}>
+								{type === "addingDog"
+									? "Ajouter un poilu"
+									: type === "addingWalk"
+										? "Ajouter une balade"
+										: "-"}
+							</Text>
+							<Pressable onPress={onClose} disabled={isLoading}>
+								<XCircle size={30} color={colors.primary} />
+							</Pressable>
+						</View>
+						{isLoading && (
+							<ActivityIndicator size="small" color={colors.primary} />
+						)}
+						{type === "addingDog" && (
+							<View style={styles.form}>
+								<TextInput
+									type="text"
+									style={styles.input}
+									placeholder="Nom de la bestiole"
+									autoCapitalize="words"
+									autoCorrect={false}
+									value={dogName}
+									onChangeText={setDogName}
+								></TextInput>
+								<View style={styles.toggleContainer}>{toggleGender}</View>
+								<Text style={styles.label}>Date de naissance</Text>
+								<DateTimePicker
+									locale="fr-FR"
+									mode="date"
+									value={dogBirth}
+									onValueChange={(event, date) => setDogBirth(date)}
+								></DateTimePicker>
+								<TextInput
+									type="text"
+									style={styles.input}
+									placeholder="Race"
+									autoCapitalize="sentences"
+									autoCorrect={true}
+									value={dogRace1}
+									onChangeText={setDogRace1}
+								></TextInput>
+								<TextInput
+									type="text"
+									style={styles.input}
+									placeholder="2ème race si croisé"
+									autoCapitalize="sentences"
+									autoCorrect={true}
+									value={dogRace2}
+									onChangeText={setDogRace2}
+								></TextInput>
+								<Pressable
+									style={styles.addDogBtn}
+									onPress={() =>
+										handleAddingDog(
+											dogName,
+											dogBirth,
+											dogRace1,
+											dogRace2,
+											dogGender,
+											user.id,
+										)
+									}
+								>
+									<Text style={styles.btnText}>Ajouter</Text>
+								</Pressable>
+							</View>
+						)}
+						{type === "addingWalk" && (
+							<View style={styles.form}>
+								<View style={styles.toggleContainer}>{toggleDogs}</View>
+								<Text style={styles.label}>Date</Text>
+								<DateTimePicker
+									locale="fr-FR"
+									mode="date"
+									value={walkDate}
+									onValueChange={(event, date) => setWalkDate(date)}
+								></DateTimePicker>
+								<Text style={styles.label}>Heure</Text>
+								<DateTimePicker
+									locale="fr-FR"
+									mode="time"
+									value={walkTime}
+									onValueChange={(event, time) => {
+										setWalkTime(time);
+									}}
+								></DateTimePicker>
+								<TextInput
+									placeholder="Durée (minutes)"
+									placeholderTextColor={colors.primary}
+									inputMode="numeric"
+									returnKeyType="next"
+									style={styles.input}
+									step={5}
+									value={walkDuration}
+									onChangeText={setWalkDuration}
+								></TextInput>
+
+								<View style={styles.toggleContainer}>{toggleNeeds}</View>
+
+								<View style={styles.toggleContainer}>{allModals()}</View>
+
+								<TextInput
+									type="text"
+									style={styles.input}
+									placeholder="Notes"
+									placeholderTextColor={colors.primary}
+									returnKeyType="send"
+									textAlignVertical="top"
+									autoCapitalize="sentences"
+									autoCorrect={true}
+									value={notes}
+									onChangeText={setNotes}
+								></TextInput>
+								<Pressable
+									style={styles.addDogBtn}
+									disabled={isLoading}
+									onPress={() => {
+										console.log(
+											`DONNÉES PRÊTES À ENVOYER : dogId = ${dogId} | walkDate = ${toLocalDateString(walkDate)} | walkTime = ${toLocalTimeString(walkTime)} | walkDuration = ${walkDuration} | pipi = ${peed} | caca = ${pooped} | notes = ${notes} | humanId = ${user.id} | dogMood = ${dogMood} | humanMood = ${humanMood} | other = ${other} | coprophagie = ${coprophagie}`,
+										);
+										handleAddingWalk(
+											dogId,
+											walkDate,
+											walkTime,
+											walkDuration,
+											peed,
+											pooped,
+											notes,
+											user.id,
+											dogMood,
+											humanMood,
+											other,
+											coprophagie,
+										);
+									}}
+								>
+									<Text style={styles.btnText}>
+										{isLoading ? "Ajout..." : "Ajouter"}
+									</Text>
+								</Pressable>
+							</View>
+						)}
 					</View>
-					{type === "addingDog" && (
-						<>
-							<TextInput
-								type="text"
-								style={styles.input}
-								placeholder="Nom de la bestiole"
-								autoCapitalize="words"
-								autoCorrect={false}
-								value={dogName}
-								onChangeText={setDogName}
-							></TextInput>
-							<View style={styles.toggleContainer}>{toggleGender}</View>
-							<Text style={styles.label}>Date de naissance</Text>
-							<DateTimePicker
-								locale="fr-FR"
-								mode="date"
-								value={dogBirth}
-								onChange={(event, date) => setDogBirth(date)}
-							></DateTimePicker>
-							<TextInput
-								type="text"
-								style={styles.input}
-								placeholder="Race"
-								autoCapitalize="sentences"
-								autoCorrect={true}
-								value={dogRace1}
-								onChangeText={setDogRace1}
-							></TextInput>
-							<TextInput
-								type="text"
-								style={styles.input}
-								placeholder="2ème race si croisé"
-								autoCapitalize="sentences"
-								autoCorrect={true}
-								value={dogRace2}
-								onChangeText={setDogRace2}
-							></TextInput>
-							<Pressable
-								style={styles.addDogBtn}
-								onPress={() =>
-									handleAddingDog(
-										dogName,
-										dogBirth,
-										dogRace1,
-										dogRace2,
-										dogGender,
-										user.id,
-									)
-								}
-							>
-								<Text style={styles.btnText}>Ajouter</Text>
-							</Pressable>
-						</>
-					)}
-					{type === "addingWalk" && (
-						<>
-							<View style={styles.toggleContainer}>{toggleDogs}</View>
-							<Text style={styles.label}>Date</Text>
-							<DateTimePicker
-								locale="fr-FR"
-								mode="date"
-								value={walkDate}
-								onChange={(event, date) => setWalkDate(date)}
-							></DateTimePicker>
-							<Text style={styles.label}>Heure</Text>
-							<DateTimePicker
-								locale="fr-FR"
-								mode="time"
-								value={walkTime}
-								onChange={(event, time) => setWalkTime(time)}
-							></DateTimePicker>
-							<TextInput
-								placeholder="Durée (minutes)"
-								inputMode="numeric"
-								returnKeyType="next"
-								style={styles.input}
-								step={5}
-								value={walkDuration}
-								onChangeText={setWalkDuration}
-							></TextInput>
-							<View style={styles.toggleContainer}>{toggleNeeds}</View>
-							<TextInput
-								type="text"
-								style={styles.input}
-								placeholder="Notes"
-								autoCapitalize="sentences"
-								autoCorrect={true}
-								value={notes}
-								onChangeText={setNotes}
-							></TextInput>
-							<Pressable
-								style={styles.addDogBtn}
-								onPress={() => {
-									console.log(
-										`DONNÉES PRÊTES À ENVOYER : dogId = ${dogId} | walkDate = ${walkDate.toISOString().split("T")[0]} | walkTime = ${walkTime.toISOString().split("T")[1]} | walkDuration = ${walkDuration} | pipi = ${peed} | caca = ${pooped} | notes = ${notes} | humanId = ${user.id}`,
-									);
-									handleAddingWalk(
-										dogId,
-										walkDate,
-										walkTime,
-										walkDuration,
-										peed,
-										pooped,
-										notes,
-										user.id,
-									);
-								}}
-							>
-								<Text style={styles.btnText}>Ajouter</Text>
-							</Pressable>
-						</>
-					)}
-				</View>
-			</View>
+				</ScrollView>
+			</KeyboardAvoidingView>
 		</Modal>
 	);
 }
 
 const styles = StyleSheet.create({
-	centeredView: {
+	flex: {
 		flex: 1,
+	},
+	scrollContent: {
+		flexGrow: 1,
 		justifyContent: "center",
+		alignItems: "center",
+		paddingVertical: 40,
+	},
+	form: {
+		width: "100%",
 		alignItems: "center",
 	},
 	card: {
@@ -427,6 +663,9 @@ const styles = StyleSheet.create({
 		display: "flex",
 		width: "100%",
 		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: 10,
+		alignItems: "center",
 		justifyContent: "space-evenly",
 		padding: 10,
 	},
@@ -442,6 +681,14 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		fontSize: 18,
 	},
+	outlineBtn: {
+		padding: 10,
+		backgroundColor: colors.lightGray,
+		borderRadius: 10,
+		fontSize: 18,
+		borderWidth: 1,
+		borderColor: colors.primary,
+	},
 	btnText: {
 		color: colors.white,
 	},
@@ -453,5 +700,25 @@ const styles = StyleSheet.create({
 	textBtn: {
 		fontSize: 20,
 		color: colors.white,
+	},
+	modalRow: {
+		width: "100%",
+		alignItems: "center",
+		marginVertical: 6,
+	},
+	optionSheet: {
+		flex: 1,
+		backgroundColor: colors.lightGray,
+		paddingHorizontal: 20,
+		paddingTop: 40,
+		paddingBottom: 20,
+	},
+	optionSheetContent: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: 12,
+		alignItems: "center",
+		justifyContent: "space-evenly",
+		paddingVertical: 20,
 	},
 });

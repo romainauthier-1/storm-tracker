@@ -3,13 +3,9 @@ import {
 	ScrollView,
 	Text,
 	StyleSheet,
-	TextInput,
 	Dimensions,
-	KeyboardAvoidingView,
-	Platform,
 	ActivityIndicator,
 	Pressable,
-	Image,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Plus } from "lucide-react-native";
@@ -57,49 +53,45 @@ export default function WalkScreen() {
 		getWalks(user.id);
 	}, [isFocused]);
 
-	const walksDisplay = walks.map((walk, i) => {
-		return <WalkCard key={i} walk={walk} />;
-	});
+	const walksDisplay = walks
+		.slice()
+		.reverse()
+		.map((walk, i) => {
+			return <WalkCard key={i} walk={walk} />;
+		});
 
 	return (
 		<View style={styles.container}>
-			{walks.length === 0 && (
-				<>
-					<Text style={styles.title}>👣 Aucune balade pour le moment 👣</Text>
-				</>
-			)}
+			<FormModal
+				type="addingWalk"
+				isVisible={isAddingWalk}
+				onClose={() => setIsAddingWalk(false)}
+			/>
+
 			{isLoading ? (
 				<ActivityIndicator size="small" color={colors.darkWhite} />
+			) : walks.length === 0 ? (
+				<Text style={styles.title}>👣 Aucune balade pour le moment 👣</Text>
 			) : (
-				<>
-					<FormModal
-						type="addingWalk"
-						isVisible={isAddingWalk}
-						onClose={() => {
-							setIsAddingWalk(false);
-						}}
-					/>
-					{!isAddingWalk && (
-						<ScrollView
-							style={{ flex: 1 }}
-							contentContainerStyle={styles.cardContainer}
-							showVerticalScrollIndicator={false}
-						>
-							{walksDisplay}
-						</ScrollView>
-					)}
-					{!isAddingWalk && (
-						<Pressable
-							style={({ pressed }) => [
-								styles.addBtn,
-								pressed && styles.addBtnPressed,
-							]}
-							onPress={() => setIsAddingWalk(true)}
-						>
-							<Plus color={colors.darkWhite} size={25} />
-						</Pressable>
-					)}
-				</>
+				<ScrollView
+					style={styles.list}
+					contentContainerStyle={styles.cardContainer}
+					showsVerticalScrollIndicator={false}
+				>
+					{walksDisplay}
+				</ScrollView>
+			)}
+
+			{!isAddingWalk && !isLoading && (
+				<Pressable
+					style={({ pressed }) => [
+						styles.addBtn,
+						pressed && styles.addBtnPressed,
+					]}
+					onPress={() => setIsAddingWalk(true)}
+				>
+					<Plus color={colors.darkWhite} size={25} />
+				</Pressable>
 			)}
 		</View>
 	);
@@ -107,16 +99,21 @@ export default function WalkScreen() {
 
 const styles = StyleSheet.create({
 	container: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "space-evenly",
 		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
 		backgroundColor: colors.background,
 		paddingTop: 30,
 		paddingBottom: 40,
 	},
+	list: {
+		flex: 1,
+		width: "100%",
+	},
 	cardContainer: {
-		paddingBottom: 10,
+		alignItems: "center",
+		paddingTop: 10,
+		paddingBottom: 120,
 	},
 	addBtn: {
 		backgroundColor: colors.primary,

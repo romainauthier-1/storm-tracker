@@ -22,6 +22,19 @@ export function fullCaps(string) {
 	return string.toUpperCase();
 }
 
+const pad = (n) => String(n).padStart(2, "0");
+
+// Renvoie la date "YYYY-MM-DD" telle qu'affichée à l'utilisateur
+// (fuseau de l'appareil), sans conversion UTC.
+export function toLocalDateString(date) {
+	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+// Renvoie l'heure "HH:MM:SS" locale (fuseau de l'appareil), sans conversion UTC.
+export function toLocalTimeString(date) {
+	return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 export const colors = {
 	primary: "#33715F",
 	secondary: "#4FB064",
