@@ -4,8 +4,8 @@
 
 ---
 
-[![Expo](https://img.shields.io/badge/Expo-54.0.33-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
-[![React Native](https://img.shields.io/badge/React_Native-0.81.5-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-57.0.0-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
+[![React Native](https://img.shields.io/badge/React_Native-0.86.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
 [![Redux](https://img.shields.io/badge/Redux-2.11.2-764ABC?style=for-the-badge&logo=redux&logoColor=white)](https://redux.js.org/)
 [![React Navigation](https://img.shields.io/badge/React_Navigation-6-673AB7?style=for-the-badge)](https://reactnavigation.org/)
 [![Lucide React Native](https://img.shields.io/badge/Lucide_React_Native-1.7.0-3B82F6?style=for-the-badge)](https://lucide.dev/)
@@ -19,7 +19,7 @@
 **Storm Tracker Frontend** est une **application mobile cross-platform** développée avec **Expo** et **React Native**. Elle offre une expérience utilisateur immersive pour :
 
 - **Gérer vos chiens** – Ajouter, modifier, supprimer vos compagnons
-- **Enregistrer vos balades** – Suivre chaque promenade avec date, durée et distance
+- **Enregistrer vos balades** – Suivre chaque promenade : date, durée, humeurs, besoins, notes
 - **Visualiser vos statistiques** – Voir l'historique de vos balades
 - **Naviguer facilement** – Interface intuitive avec onglets
 - **Recevoir des notifications** – Alertes pour les nouvelles fonctionnalités
@@ -32,14 +32,14 @@ L'application est conçue pour être simple, rapide et agréable à utiliser au 
 
 | Catégorie            | Technologie                                                                                             | Version | Rôle                                  |
 | -------------------- | ------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------- |
-| **Framework**        | [Expo](https://expo.dev/)                                                                               | 54.0.33 | Framework React Native                |
-| **Librairie UI**     | [React Native](https://reactnative.dev/)                                                                | 0.81.5  | Construction de l'interface mobile    |
+| **Framework**        | [Expo](https://expo.dev/)                                                                               | 57.0.0  | Framework React Native                |
+| **Librairie UI**     | [React Native](https://reactnative.dev/)                                                                | 0.86.3  | Construction de l'interface mobile    |
 | **State Management** | [Redux Toolkit](https://redux-toolkit.js.org/)                                                          | 2.11.2  | Gestion centralisée de l'état         |
 | **Persistance**      | [Redux Persist](https://github.com/rt2zz/redux-persist)                                                 | 6.0.0   | Sauvegarde du state dans AsyncStorage |
 | **Navigation**       | [React Navigation](https://reactnavigation.org/)                                                        | 6       | Navigation entre écrans               |
 | **Icons**            | [Lucide React Native](https://lucide.dev/)                                                              | 1.7.0   | Bibliothèque d'icônes                 |
 | **Storage**          | [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)                             | 2.2.0   | Stockage local                        |
-| **DateTime Picker**  | [@react-native-community/datetimepicker](https://github.com/react-native-datetimepicker/datetimepicker) | 8.4.4   | Sélecteur de dates                    |
+| **DateTime Picker**  | [@react-native-community/datetimepicker](https://github.com/react-native-datetimepicker/datetimepicker) | 9.1.0   | Sélecteur de dates                    |
 | **Flash Messages**   | [react-native-flash-message](https://github.com/luggit/react-native-flash-message)                      | 0.4.2   | Notifications toast                   |
 | **PWA**              | [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)                   | -       | Notifications push                    |
 | **Déploiement**      | [Expo EAS](https://docs.expo.dev/eas/)                                                                  | -       | Build et déploiement                  |
@@ -75,7 +75,7 @@ L'application est conçue pour être simple, rapide et agréable à utiliser au 
 
 - **Liste des balades** – Historique de toutes vos balades
 - **Ajout de balade** – Enregistrement d'une nouvelle promenade
-- **Détails de la balade** – Date, durée, distance, chien associé
+- **Détails de la balade** – Date, durée, humeurs, besoins, notes
 
 ### 🎨 **Écrans**
 
@@ -87,10 +87,11 @@ L'application est conçue pour être simple, rapide et agréable à utiliser au 
 
 ### 📝 **Composants**
 
-- **Card.js** – Carte générique réutilisable
-- **DogCard.jsx** – Carte spécifique pour les chiens
-- **WalkCard.jsx** – Carte spécifique pour les balades
-- **FormModal.jsx** – Modal de formulaire pour l'ajout/édition
+- **ui/** – primitives partagées (`Card`, `Fab`, `ChipGroup`, `Field`,
+  `ScreenLayout`, `EmptyState`, `ScreenTitle`)
+- **DogCard.jsx / WalkCard.jsx** – cartes chien / balade
+- **FormModal.jsx** – feuille d'ajout, routée vers `forms/AddDogForm` ou
+  `forms/AddWalkForm`
 
 ---
 
@@ -159,39 +160,37 @@ L'application est conçue pour être simple, rapide et agréable à utiliser au 
 
 ## 📁 Structure du Projet
 
+Structure **plate** (pas de `src/`) :
+
 ```
 storm-tracker-frontend/
-├── App.js                     # Point d'entrée principal
-├── index.js                  # Registration Expo
-├── package.json              # Dépendances et scripts
-├── app.json                  # Configuration Expo
-├── .env                      # Variables d'environnement
-├── .gitignore                # Fichiers ignorés par Git
+├── App.js                  # store + providers + navigation
+├── index.js                # registerRootComponent
 │
-├── assets/                   # Ressources statiques
+├── api/                    # client HTTP unique + helpers par domaine
+│   ├── client.js           # request() : URL de base, JSON, contrat backend
+│   └── auth.js  dogs.js  walks.js
+├── hooks/                  # useDogs, useWalks — logique d'écran réutilisable
+├── lib/format.js           # helpers purs (dates, listes, libellés)
+├── theme/                  # design tokens (colors, spacing, radius, shadows…)
+├── constants/walk.js       # listes d'options des formulaires
 │
-├── public/                   # Fichiers publics
-│   └── apple-touch-icon.png  # Icône pour PWA
+├── components/
+│   ├── ui/                 # primitives (Card, Fab, ChipGroup, Field, …)
+│   ├── fields/             # DateField (+ .web.jsx)
+│   ├── forms/              # AddDogForm, AddWalkForm, OptionPickerModal
+│   └── DogCard.jsx  WalkCard.jsx  FormModal.jsx
+├── screens/                # LoginScreen, WelcomeScreen, DogScreen,
+│                           #   WalkScreen, LogOutScreen
+├── reducers/user.js        # slice Redux
+├── utils.js                # capitalize + toLocalDateString/TimeString
+├── __tests__/              # tests Jest
 │
-├── components/               # Composants réutilisables
-│   ├── Card.js               # Carte générique
-│   ├── DogCard.jsx           # Carte chien
-│   ├── WalkCard.jsx          # Carte balade
-│   └── FormModal.jsx         # Modal de formulaire
-│
-├── screens/                  # Écrans de l'application
-│   ├── LoginScreen.jsx      # Écran de connexion
-│   ├── WelcomeScreen.jsx    # Écran d'accueil
-│   ├── DogScreen.jsx         # Écran des chiens
-│   └── WalkScreen.jsx        # Écran des balades
-│
-├── reducers/                 # Store Redux
-│   └── user.js               # Reducer utilisateur
-│
-├── utils.js                  # Fonctions utilitaires
-│
-└── node_modules/             # Dépendances installées
+├── assets/  public/        # ressources statiques, template web / PWA
+└── app.json  vercel.json   # config Expo / déploiement
 ```
+
+Voir [`conventions.md`](conventions.md) pour le détail.
 
 ---
 
@@ -238,11 +237,12 @@ La configuration de la barre de navigation est dans `App.js`. Tu peux y modifier
 
 Le composant `WalkCard.jsx` affiche :
 
-- Date de la balade
+- Date et heure de la balade
 - Durée
-- Distance
+- Besoins (pipi / caca)
+- Humeurs du chien et de l'humain, autres infos, coprophagie
+- Notes
 - Chien associé
-- Options d'édition/suppression
 
 ---
 
