@@ -1,5 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { colors } from "../../utils";
+import { clampDate } from "./clampDate";
 
 // Web / PWA implementation of <DateField>.
 // `@react-native-community/datetimepicker` has no web build (it renders `null`
@@ -67,7 +68,13 @@ export default function DateField({
 				max={maximumDate ? toInputValue(maximumDate, mode) : undefined}
 				min={minimumDate ? toInputValue(minimumDate, mode) : undefined}
 				onChange={(event) =>
-					onChange(fromInputValue(event.target.value, mode, value))
+					onChange(
+						clampDate(
+							fromInputValue(event.target.value, mode, value),
+							minimumDate,
+							maximumDate,
+						),
+					)
 				}
 				style={inputStyle}
 			/>

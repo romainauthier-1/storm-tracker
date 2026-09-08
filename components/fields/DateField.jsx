@@ -3,6 +3,7 @@ import RNDateTimePicker, {
 	DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
 import { colors } from "../../utils";
+import { clampDate } from "./clampDate";
 
 // Cross-platform date / time field.
 // This is the native implementation (iOS + Android). The web / PWA build
@@ -28,7 +29,7 @@ export default function DateField({
 
 	const handleChange = (event, next) => {
 		if (event?.type === "dismissed" || !next) return;
-		onChange(next);
+		onChange(clampDate(next, minimumDate, maximumDate));
 	};
 
 	// Android has no inline picker: open the platform dialog on demand.
