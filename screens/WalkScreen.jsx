@@ -1,26 +1,17 @@
-import {
-	View,
-	ScrollView,
-	Text,
-	StyleSheet,
-	ActivityIndicator,
-	Pressable,
-} from "react-native";
+import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import { Plus } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { colors, capitalize } from "../utils";
-import { radius, screenTitle, shadows } from "../theme";
-import { setWalks, addWalk } from "../reducers/user";
+import { colors } from "../utils";
+import { setWalks } from "../reducers/user";
 import FormModal from "../components/FormModal";
 import WalkCard from "../components/WalkCard";
+import { EmptyState, Fab, ScreenLayout } from "../components/ui";
 
 export default function WalkScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
-	const dogs = user.dogs;
 	const walks = user.walks;
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +49,7 @@ export default function WalkScreen() {
 		});
 
 	return (
-		<View style={styles.container}>
+		<ScreenLayout justify="center" style={styles.screen}>
 			<FormModal
 				type="addingWalk"
 				isVisible={isAddingWalk}
@@ -68,7 +59,7 @@ export default function WalkScreen() {
 			{isLoading ? (
 				<ActivityIndicator size="small" color={colors.darkWhite} />
 			) : walks.length === 0 ? (
-				<Text style={styles.title}>👣 Aucune balade pour le moment 👣</Text>
+				<EmptyState>👣 Aucune balade pour le moment 👣</EmptyState>
 			) : (
 				<ScrollView
 					style={styles.list}
@@ -80,26 +71,17 @@ export default function WalkScreen() {
 			)}
 
 			{!isAddingWalk && !isLoading && (
-				<Pressable
-					style={({ pressed }) => [
-						styles.addBtn,
-						pressed && styles.addBtnPressed,
-					]}
+				<Fab
 					onPress={() => setIsAddingWalk(true)}
-				>
-					<Plus color={colors.darkWhite} size={25} />
-				</Pressable>
+					accessibilityLabel="Ajouter une balade"
+				/>
 			)}
-		</View>
+		</ScreenLayout>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: colors.background,
+	screen: {
 		paddingTop: 30,
 		paddingBottom: 40,
 	},
@@ -111,35 +93,5 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingTop: 10,
 		paddingBottom: 120,
-	},
-	addBtn: {
-		backgroundColor: colors.primary,
-		borderRadius: radius.pill,
-		borderColor: colors.darkWhite,
-		borderWidth: 1,
-		...shadows.floating,
-		padding: 10,
-		position: "absolute",
-		bottom: 80,
-		left: "50%",
-		transform: [{ translateX: -25 }],
-		zIndex: 100,
-	},
-	addBtnPressed: {
-		backgroundColor: colors.secondary,
-		borderRadius: radius.pill,
-		borderColor: colors.white,
-		borderWidth: 1,
-		...shadows.floating,
-		padding: 10,
-		position: "absolute",
-		bottom: 80,
-		left: "50%",
-		transform: [{ translateX: -25 }],
-		zIndex: 100,
-	},
-	title: {
-		...screenTitle,
-		color: colors.darkWhite,
 	},
 });

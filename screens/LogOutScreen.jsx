@@ -1,18 +1,9 @@
-import {
-	View,
-	ScrollView,
-	Text,
-	Pressable,
-	StyleSheet,
-	TextInput,
-	ActivityIndicator,
-} from "react-native";
+import { Text, Pressable, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../reducers/user";
-import { colors } from "../utils";
-import { capitalize } from "../utils";
-import { fontSize, radius, screenTitle } from "../theme";
-import { activateNotif } from "../reducers/user";
+import { colors, capitalize } from "../utils";
+import { fontSize, radius } from "../theme";
+import { ScreenLayout, ScreenTitle } from "../components/ui";
 
 export default function LogOutScreen({ navigation, onActivatePush }) {
 	const dispatch = useDispatch();
@@ -42,10 +33,10 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 	};
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>
+		<ScreenLayout>
+			<ScreenTitle>
 				🤙 Hey {user.username ? capitalize(user.username) : "Invité.e"}
-			</Text>
+			</ScreenTitle>
 			<Pressable
 				onPress={() => handleLogOut(user.id)}
 				style={styles.logoutButton}
@@ -53,7 +44,8 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 				<Text style={styles.text}>Déconnexion</Text>
 			</Pressable>
 
-			{/* {isNotifActive ? (
+			{/* Notifications push — à câbler (voir backlog) :
+			{isNotifActive ? (
 				<View style={styles.notif}>
 					<Text style={styles.notifText}>Notifications activées</Text>
 				</View>
@@ -72,24 +64,12 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 					<Text style={styles.text}>🔔 Active les notifs</Text>
 				</Pressable>
 			)} */}
-		</View>
+		</ScreenLayout>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "space-evenly",
-		flex: 1,
-		backgroundColor: colors.background,
-	},
-	title: {
-		...screenTitle,
-		color: colors.darkWhite,
-	},
 	logoutButton: {
-		display: "flex",
 		alignItems: "center",
 		justifyContent: "space-evenly",
 		backgroundColor: colors.secondary,
