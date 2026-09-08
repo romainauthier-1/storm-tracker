@@ -4,7 +4,6 @@ import {
 	Text,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	KeyboardAvoidingView,
 	Platform,
 	ActivityIndicator,
@@ -15,12 +14,10 @@ import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
+import { radius, screenTitle, shadows } from "../theme";
 import { Plus } from "lucide-react-native";
 import DogCard from "../components/DogCard";
 import FormModal from "../components/FormModal";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
 
 export default function DogScreen() {
 	const dispatch = useDispatch();
@@ -90,22 +87,15 @@ const styles = StyleSheet.create({
 		paddingBottom: 40,
 	},
 	title: {
-		fontSize: 30,
+		...screenTitle,
 		color: colors.darkWhite,
-		fontWeight: "bold",
-		letterSpacing: 2,
-		textAlign: "center",
 	},
 	addBtn: {
 		backgroundColor: colors.primary,
-		borderRadius: 25,
+		borderRadius: radius.pill,
 		borderColor: colors.darkWhite,
 		borderWidth: 1,
-		shadowColor: "#000",
-		shadowOffset: { width: 5, height: 4 },
-		shadowOpacity: 0.2,
-		shadowRadius: 12,
-		elevation: 8,
+		...shadows.floating,
 		padding: 10,
 		position: "absolute",
 		bottom: 80,
@@ -115,14 +105,10 @@ const styles = StyleSheet.create({
 	},
 	addBtnPressed: {
 		backgroundColor: colors.secondary,
-		borderRadius: 25,
+		borderRadius: radius.pill,
 		borderColor: colors.white,
 		borderWidth: 1,
-		shadowColor: "#000",
-		shadowOffset: { width: 5, height: 4 },
-		shadowOpacity: 0.2,
-		shadowRadius: 12,
-		elevation: 8,
+		...shadows.floating,
 		padding: 10,
 		position: "absolute",
 		bottom: 80,

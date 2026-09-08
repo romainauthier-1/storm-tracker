@@ -4,7 +4,6 @@ import {
 	Text,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	Pressable,
 	KeyboardAvoidingView,
 	ActivityIndicator,
@@ -16,11 +15,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, toLocalDateString, toLocalTimeString } from "../utils";
+import { fontSize, maxContentWidth, radius } from "../theme";
 import { XCircle } from "lucide-react-native";
 import { addDog, addWalk } from "../reducers/user";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
 
 export default function FormModal({ type, isVisible, onClose }) {
 	const dispatch = useDispatch();
@@ -357,9 +354,9 @@ export default function FormModal({ type, isVisible, onClose }) {
 					visible={visible}
 					onRequestClose={() => setVisible(false)}
 					style={{
-						borderRadius: 15,
-						width: screenWidth * 0.8,
-						maxHeight: screenHeight * 0.6,
+						borderRadius: radius.lg,
+						width: "80%",
+						maxHeight: "60%",
 						marginVertical: "auto",
 						alignSelf: "center",
 					}}
@@ -626,15 +623,16 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	card: {
-		borderRadius: 15,
+		borderRadius: radius.lg,
 		padding: 10,
-		width: screenWidth * 0.8,
+		width: "80%",
+		maxWidth: maxContentWidth,
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "space-evenly",
 		backgroundColor: colors.lightGray,
 		alignSelf: "center",
-		shadowColor: "#000",
+		shadowColor: colors.shadow,
 		shadowOffset: { width: 10, height: 6 },
 		shadowOpacity: 0.3,
 		shadowRadius: 20,
@@ -648,19 +646,19 @@ const styles = StyleSheet.create({
 	title: {
 		color: colors.primary,
 		textAlign: "center",
-		fontSize: 20,
+		fontSize: fontSize.xl,
 		padding: 10,
 		marginBottom: 20,
 	},
 	label: {
 		color: colors.primary,
 		textAlign: "center",
-		fontSize: 18,
+		fontSize: fontSize.lg,
 		padding: 8,
 	},
 	input: {
 		color: colors.primary,
-		fontSize: 18,
+		fontSize: fontSize.lg,
 		textAlign: "center",
 		borderColor: colors.secondary,
 		borderBottomWidth: 1,
@@ -703,10 +701,10 @@ const styles = StyleSheet.create({
 	addDogBtn: {
 		padding: 15,
 		backgroundColor: colors.primary,
-		borderRadius: 20,
+		borderRadius: radius.xl,
 	},
 	textBtn: {
-		fontSize: 20,
+		fontSize: fontSize.xl,
 		color: colors.white,
 	},
 	modalRow: {

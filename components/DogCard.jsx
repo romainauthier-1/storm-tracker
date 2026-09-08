@@ -4,7 +4,6 @@ import {
 	Text,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	Pressable,
 	KeyboardAvoidingView,
 } from "react-native";
@@ -13,9 +12,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, minimize } from "../utils";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
+import { fontSize, maxContentWidth, radius, shadows } from "../theme";
 
 export default function DogCard({ dog }) {
 	const dispatch = useDispatch();
@@ -57,9 +54,10 @@ const styles = StyleSheet.create({
 	card: {
 		borderWidth: 1,
 		borderColor: colors.lightGray,
-		borderRadius: 15,
+		borderRadius: radius.lg,
 		padding: 10,
-		width: screenWidth * 0.8,
+		width: "80%",
+		maxWidth: maxContentWidth,
 		marginTop: 20,
 		marginBottom: 20,
 		display: "flex",
@@ -67,20 +65,16 @@ const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		backgroundColor: colors.primary,
 		alignSelf: "center",
-		shadowColor: "#000",
-		shadowOffset: { width: 8, height: 0 },
-		shadowOpacity: 0.2,
-		shadowRadius: 12,
-		elevation: 8,
+		...shadows.card,
 	},
 	title: {
 		color: colors.lightGray,
 		textAlign: "center",
-		fontSize: 18,
+		fontSize: fontSize.lg,
 	},
 	description: {
 		color: colors.white,
-		fontSize: 16,
+		fontSize: fontSize.md,
 		textAlign: "center",
 		marginVertical: 10,
 	},

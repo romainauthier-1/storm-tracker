@@ -35,17 +35,9 @@ export function toLocalTimeString(date) {
 	return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
-export const colors = {
-	primary: "#33715F",
-	secondary: "#4FB064",
-	white: "#FFFFFF",
-	darkWhite: "#ebebeb",
-	text: "#16312A",
-	muted: "#8692a7d1",
-	lightGray: "#cfcfcf",
-	background: "#336471",
-	destructive: "#ca0d0d",
-};
+// Design tokens live in `theme/`. Re-exported here so existing
+// `import { colors } from "../utils"` call sites keep working.
+export { colors } from "./theme/colors";
 
 const checkName = (name) => {
 	if (name.includes("-")) {

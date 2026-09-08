@@ -7,7 +7,8 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
 		/>
-		<meta name="theme-color" content="#B5A1C4" />
+		<!-- Doit rester aligné sur colors.primary (theme/colors.js) et app.json web.themeColor -->
+		<meta name="theme-color" content="#33715F" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<title>Storm Tracker</title>
 		<!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
@@ -34,7 +35,8 @@
 				width: 100%;
 				margin: 0;
 				padding: 0;
-				background-color: #1b365d;
+				/* = colors.primary (theme/colors.js) : évite un flash de couleur au chargement */
+				background-color: #33715f;
 				overflow: hidden;
 			}
 		</style>

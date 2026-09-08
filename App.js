@@ -18,6 +18,7 @@ import {
 	Footprints,
 } from "lucide-react-native";
 import { colors } from "./utils";
+import { radius } from "./theme";
 
 import user from "./reducers/user";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -54,13 +55,13 @@ const HomeTabs = ({ onActivatePush }) => {
 					height: 60,
 					position: "absolute",
 					borderTopWidth: 0,
-					shadowColor: "#000",
+					shadowColor: colors.shadow,
 					shadowOffset: { width: 5, height: 4 },
 					shadowOpacity: 0.2,
 					shadowRadius: 8,
 					elevation: 8,
 					marginHorizontal: 30,
-					borderRadius: 25,
+					borderRadius: radius.pill,
 					marginBottom: 10,
 					backgroundColor: colors.secondary,
 					padding: 10,
@@ -184,7 +185,7 @@ const MyTheme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		background: colors.backgroundLight,
+		background: colors.background,
 	},
 };
 

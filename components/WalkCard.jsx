@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../utils";
-
-const screenWidth = Dimensions.get("window").width;
+import { fontSize, maxContentWidth, radius, shadows } from "../theme";
 
 export default function WalkCard({ walk }) {
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -86,9 +85,10 @@ const styles = StyleSheet.create({
 	card: {
 		borderWidth: 1,
 		borderColor: colors.lightGray,
-		borderRadius: 15,
+		borderRadius: radius.lg,
 		padding: 10,
-		width: screenWidth * 0.8,
+		width: "80%",
+		maxWidth: maxContentWidth,
 		marginTop: 20,
 		marginBottom: 20,
 		display: "flex",
@@ -96,23 +96,19 @@ const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		backgroundColor: colors.primary,
 		alignSelf: "center",
-		shadowColor: "#000",
-		shadowOffset: { width: 8, height: 0 },
-		shadowOpacity: 0.2,
-		shadowRadius: 12,
-		elevation: 8,
+		...shadows.card,
 		overflow: "visible",
 	},
 	title: {
 		color: colors.lightGray,
 		textAlign: "center",
-		fontSize: 18,
+		fontSize: fontSize.lg,
 	},
 	dogBadge: {
 		backgroundColor: colors.darkWhite,
 		padding: 8,
-		borderRadius: 12,
-		fontSize: 20,
+		borderRadius: radius.md,
+		fontSize: fontSize.xl,
 		transform: [{ rotate: "-90deg" }],
 		position: "absolute",
 		top: "35%",
@@ -121,7 +117,7 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		color: colors.white,
-		fontSize: 16,
+		fontSize: fontSize.md,
 		textAlign: "center",
 		marginVertical: 10,
 	},
