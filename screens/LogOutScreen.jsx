@@ -7,10 +7,9 @@ import { colors, capitalize } from "../utils";
 import { fontSize, radius } from "../theme";
 import { ScreenLayout, ScreenTitle } from "../components/ui";
 
-export default function LogOutScreen({ navigation, onActivatePush }) {
+export default function LogOutScreen() {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
-	const isNotifActive = useSelector((state) => state.user.notifActivated);
 
 	const handleLogOut = async (humanId) => {
 		try {
@@ -34,27 +33,6 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 			>
 				<Text style={styles.text}>Déconnexion</Text>
 			</Pressable>
-
-			{/* Notifications push — à câbler (voir backlog) :
-			{isNotifActive ? (
-				<View style={styles.notif}>
-					<Text style={styles.notifText}>Notifications activées</Text>
-				</View>
-			) : (
-				<Pressable
-					onPress={async () => {
-						try {
-							await onActivatePush();
-							dispatch(activateNotif(true));
-						} catch (err) {
-							console.error("Erreur activation notifs :", err);
-						}
-					}}
-					style={styles.logoutButton}
-				>
-					<Text style={styles.text}>🔔 Active les notifs</Text>
-				</Pressable>
-			)} */}
 		</ScreenLayout>
 	);
 }
@@ -72,22 +50,6 @@ const styles = StyleSheet.create({
 	text: {
 		color: colors.lightGray,
 		fontSize: fontSize.xl,
-		fontWeight: "bold",
-	},
-	notif: {
-		backgroundColor: colors.secondary,
-		justifyContent: "center",
-		alignItems: "center",
-		width: 210,
-		height: 100,
-		borderRadius: radius.round,
-		padding: 10,
-		opacity: 0.5,
-	},
-	notifText: {
-		color: colors.white,
-		textAlign: "center",
-		fontSize: 15,
 		fontWeight: "bold",
 	},
 });
