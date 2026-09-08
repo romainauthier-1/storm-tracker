@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../utils";
-import { fontSize, maxContentWidth, radius, shadows } from "../theme";
+import { fontSize, radius } from "../theme";
+import { Card, CardText, CardTitle } from "./ui";
 
 export default function WalkCard({ walk }) {
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -9,13 +10,6 @@ export default function WalkCard({ walk }) {
 		weekday: "long",
 		day: "numeric",
 		month: "numeric",
-		timeZone: userTimeZone,
-	};
-
-	const timeOptions = {
-		hour12: false,
-		hour: "numeric",
-		minute: "numeric",
 		timeZone: userTimeZone,
 	};
 
@@ -36,74 +30,47 @@ export default function WalkCard({ walk }) {
 	const timeToDisplay = walk.time
 		? walk.time.split(".")[0].split(":").slice(0, 2).join("h")
 		: "";
+
 	return (
-		<View style={styles.card}>
+		<Card>
 			<Text style={styles.dogBadge}>{walk.dog_name}</Text>
-			<Text style={styles.title}>
+			<CardTitle>
 				{dateToDisplay} à {timeToDisplay}
-			</Text>
-			<Text style={styles.description}>{walk.duration} minutes</Text>
-			{walk.meetings && (
-				<Text style={styles.description}>{meetingsDisplay}</Text>
-			)}
-			<Text style={styles.description}>
+			</CardTitle>
+			<CardText>{walk.duration} minutes</CardText>
+			{walk.meetings && <CardText>{meetingsDisplay}</CardText>}
+			<CardText>
 				{walk.peed ? "💦" : "Pas de pipi"} |{" "}
 				{walk.pooped ? "💩" : "Pas de caca"}
-			</Text>
-			<Text style={styles.description}>
+			</CardText>
+			<CardText>
 				Humeur du chien :{" "}
 				{walk.dog_mood?.length > 0
 					? walk.dog_mood.map((mood) => mood).join(", ")
 					: "RAS ✅"}
-			</Text>
-			<Text style={styles.description}>
+			</CardText>
+			<CardText>
 				Humeur de l'humain :{" "}
 				{walk.human_mood?.length > 0
 					? walk.human_mood.map((mood) => mood).join(", ")
 					: "RAS ✅"}
-			</Text>
-			<Text style={styles.description}>
+			</CardText>
+			<CardText>
 				Autres infos :{" "}
 				{walk.other?.length > 0
 					? walk.other.map((other) => other).join(", ")
 					: "RAS ✅"}
-			</Text>
-			<Text style={styles.description}>
+			</CardText>
+			<CardText>
 				Coprophagie :{" "}
 				{walk.coprophagie > 0 ? `${walk.coprophagie} fois` : "RAS ✅"}
-			</Text>
-			{walk.notes && (
-				<Text style={styles.description}>
-					Notes : {walk.notes ? walk.notes : "RAS ✅"}
-				</Text>
-			)}
-		</View>
+			</CardText>
+			{walk.notes && <CardText>Notes : {walk.notes}</CardText>}
+		</Card>
 	);
 }
 
 const styles = StyleSheet.create({
-	card: {
-		borderWidth: 1,
-		borderColor: colors.lightGray,
-		borderRadius: radius.lg,
-		padding: 10,
-		width: "80%",
-		maxWidth: maxContentWidth,
-		marginTop: 20,
-		marginBottom: 20,
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "space-evenly",
-		backgroundColor: colors.primary,
-		alignSelf: "center",
-		...shadows.card,
-		overflow: "visible",
-	},
-	title: {
-		color: colors.lightGray,
-		textAlign: "center",
-		fontSize: fontSize.lg,
-	},
 	dogBadge: {
 		backgroundColor: colors.darkWhite,
 		padding: 8,
@@ -114,11 +81,5 @@ const styles = StyleSheet.create({
 		top: "35%",
 		left: -25,
 		zIndex: 999,
-	},
-	description: {
-		color: colors.white,
-		fontSize: fontSize.md,
-		textAlign: "center",
-		marginVertical: 10,
 	},
 });

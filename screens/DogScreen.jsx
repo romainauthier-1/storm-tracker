@@ -1,27 +1,11 @@
-import {
-	View,
-	ScrollView,
-	Text,
-	StyleSheet,
-	TextInput,
-	KeyboardAvoidingView,
-	Platform,
-	ActivityIndicator,
-	Pressable,
-	Image,
-} from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { colors, capitalize } from "../utils";
-import { radius, screenTitle, shadows } from "../theme";
-import { Plus } from "lucide-react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import DogCard from "../components/DogCard";
 import FormModal from "../components/FormModal";
+import { Fab, ScreenLayout, ScreenTitle } from "../components/ui";
 
 export default function DogScreen() {
-	const dispatch = useDispatch();
-	const isFocused = useIsFocused();
 	const [isAddingDog, setIsAddingDog] = useState(false);
 	const user = useSelector((state) => state.user);
 	const dogs = user?.dogs || [];
@@ -29,91 +13,55 @@ export default function DogScreen() {
 	const dogsToDisplay = dogs.map((dog) => <DogCard dog={dog} key={dog?.id} />);
 
 	return (
-		<KeyboardAvoidingView style={styles.container}>
+		<ScreenLayout style={styles.screen}>
 			{!isAddingDog && (
 				<>
-					<Text style={styles.title}>
+					<ScreenTitle>
 						🐶{" "}
 						{dogs.length > 1
 							? "Mes poilus"
 							: dogs.length === 0
 								? "Aucun poilu"
 								: "Mon poilu"}{" "}
-						{} 🐶
-					</Text>
-					<Text style={styles.title}>
-						{dogs.length === 0 && "pour le moment"}
-					</Text>
+						🐶
+					</ScreenTitle>
+					{dogs.length === 0 && <ScreenTitle>pour le moment</ScreenTitle>}
 				</>
 			)}
 
 			<ScrollView
-				style={{ flex: 1 }}
+				style={styles.list}
 				contentContainerStyle={styles.dogContainer}
-				showVerticalScrollIndicator={false}
+				showsVerticalScrollIndicator={false}
 			>
 				{dogsToDisplay}
 			</ScrollView>
+
 			<FormModal
 				type="addingDog"
 				isVisible={isAddingDog}
-				onClose={() => {
-					setIsAddingDog(false);
-				}}
+				onClose={() => setIsAddingDog(false)}
 			/>
+
 			{!isAddingDog && (
-				<Pressable
-					style={({ pressed }) => [
-						styles.addBtn,
-						pressed && styles.addBtnPressed,
-					]}
+				<Fab
 					onPress={() => setIsAddingDog(true)}
-				>
-					<Plus color={colors.darkWhite} size={25} />
-				</Pressable>
+					accessibilityLabel="Ajouter un poilu"
+				/>
 			)}
-		</KeyboardAvoidingView>
+		</ScreenLayout>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "space-evenly",
-		flex: 1,
-		backgroundColor: colors.background,
+	screen: {
 		paddingTop: 30,
 		paddingBottom: 40,
 	},
-	title: {
-		...screenTitle,
-		color: colors.darkWhite,
+	list: {
+		flex: 1,
 	},
-	addBtn: {
-		backgroundColor: colors.primary,
-		borderRadius: radius.pill,
-		borderColor: colors.darkWhite,
-		borderWidth: 1,
-		...shadows.floating,
-		padding: 10,
-		position: "absolute",
-		bottom: 80,
-		left: "50%",
-		transform: [{ translateX: -25 }],
-		zIndex: 100,
-	},
-	addBtnPressed: {
-		backgroundColor: colors.secondary,
-		borderRadius: radius.pill,
-		borderColor: colors.white,
-		borderWidth: 1,
-		...shadows.floating,
-		padding: 10,
-		position: "absolute",
-		bottom: 80,
-		left: "50%",
-		transform: [{ translateX: -25 }],
-		zIndex: 100,
+	dogContainer: {
+		alignItems: "center",
 	},
 });

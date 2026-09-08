@@ -1,27 +1,16 @@
-import {
-	View,
-	ScrollView,
-	Text,
-	StyleSheet,
-	TextInput,
-	KeyboardAvoidingView,
-	Platform,
-	ActivityIndicator,
-	Pressable,
-	Image,
-} from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
-import { fontSize, screenTitle } from "../theme";
-import { setDogs, setWalks } from "../reducers/user";
+import { fontSize } from "../theme";
+import { setDogs } from "../reducers/user";
+import { ScreenLayout, ScreenTitle } from "../components/ui";
 
 export default function WelcomeScreen() {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const user = useSelector((state) => state.user);
-	const dogs = user.dogs || [];
 	const walks = user.walks || [];
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
@@ -36,7 +25,6 @@ export default function WelcomeScreen() {
 
 			if (data.result) {
 				dispatch(setDogs(data.dogs));
-				// console.log("CHIENS REÇUS : ", data.dogs);
 			}
 		} catch (err) {
 			console.error(err);
@@ -64,22 +52,21 @@ export default function WelcomeScreen() {
 	const today = new Date();
 
 	const walksOfToday = walks.filter((walk) => {
-		const dateBaladeLocale = new Date(walk.date);
-
-		const memeAnnee = dateBaladeLocale.getFullYear() === today.getFullYear();
-		const memeMois = dateBaladeLocale.getMonth() === today.getMonth();
-		const memeJour = dateBaladeLocale.getDate() === today.getDate();
-
-		return memeAnnee && memeMois && memeJour;
+		const walkDate = new Date(walk.date);
+		return (
+			walkDate.getFullYear() === today.getFullYear() &&
+			walkDate.getMonth() === today.getMonth() &&
+			walkDate.getDate() === today.getDate()
+		);
 	});
 
 	const nbOfWalksToday = walksOfToday?.length;
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>
+		<ScreenLayout justify="space-between" paddingVertical={80}>
+			<ScreenTitle>
 				🤙 Salut {user.username ? capitalize(user.username) : "Invité.e"} !
-			</Text>
+			</ScreenTitle>
 			<Text style={styles.date}>{todayDisplay}</Text>
 			<Text style={styles.date}>
 				{nbOfWalksToday === 0
@@ -88,24 +75,11 @@ export default function WelcomeScreen() {
 						? `${nbOfWalksToday} balade aujourd'hui !`
 						: `${nbOfWalksToday} balades aujourd'hui !`}
 			</Text>
-			<Text style={styles.date}>{}</Text>
-		</View>
+		</ScreenLayout>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "space-between",
-		flex: 1,
-		backgroundColor: colors.background,
-		paddingVertical: 80,
-	},
-	title: {
-		...screenTitle,
-		color: colors.darkWhite,
-	},
 	date: {
 		fontSize: fontSize.xl,
 		color: colors.darkWhite,
