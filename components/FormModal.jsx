@@ -12,7 +12,7 @@ import {
 	Modal,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateField from "./fields/DateField";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, toLocalDateString, toLocalTimeString } from "../utils";
@@ -401,7 +401,7 @@ export default function FormModal({ type, isVisible, onClose }) {
 						walked_dog: dogId,
 						date: toLocalDateString(walkDate),
 						time: toLocalTimeString(walkTime),
-						duration: walkDuration,
+						duration: Number(walkDuration) || 0,
 						peed,
 						pooped,
 						notes,
@@ -480,12 +480,12 @@ export default function FormModal({ type, isVisible, onClose }) {
 								></TextInput>
 								<View style={styles.toggleContainer}>{toggleGender}</View>
 								<Text style={styles.label}>Date de naissance</Text>
-								<DateTimePicker
-									locale="fr-FR"
+								<DateField
 									mode="date"
 									value={dogBirth}
-									onValueChange={(event, date) => setDogBirth(date)}
-								></DateTimePicker>
+									maximumDate={new Date()}
+									onChange={setDogBirth}
+								/>
 								<TextInput
 									type="text"
 									style={styles.input}
@@ -525,21 +525,18 @@ export default function FormModal({ type, isVisible, onClose }) {
 							<View style={styles.form}>
 								<View style={styles.toggleContainer}>{toggleDogs}</View>
 								<Text style={styles.label}>Date</Text>
-								<DateTimePicker
-									locale="fr-FR"
+								<DateField
 									mode="date"
 									value={walkDate}
-									onValueChange={(event, date) => setWalkDate(date)}
-								></DateTimePicker>
+									maximumDate={new Date()}
+									onChange={setWalkDate}
+								/>
 								<Text style={styles.label}>Heure</Text>
-								<DateTimePicker
-									locale="fr-FR"
+								<DateField
 									mode="time"
 									value={walkTime}
-									onValueChange={(event, time) => {
-										setWalkTime(time);
-									}}
-								></DateTimePicker>
+									onChange={setWalkTime}
+								/>
 								<TextInput
 									placeholder="Durée (minutes)"
 									placeholderTextColor={colors.primary}
