@@ -1,5 +1,5 @@
 {
-	"name": "clemapp-frontend",
+	"name": "storm-tracker-frontend",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
