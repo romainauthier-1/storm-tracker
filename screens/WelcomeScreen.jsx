@@ -1,42 +1,16 @@
 import { Text, StyleSheet } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
 import { fontSize } from "../theme";
-import { setDogs } from "../reducers/user";
+import { useDogs } from "../hooks/useDogs";
 import { ScreenLayout, ScreenTitle } from "../components/ui";
 
 export default function WelcomeScreen() {
-	const dispatch = useDispatch();
-	const isFocused = useIsFocused();
+	// Fetched here (and cached in the store) so the Chiens tab has data too.
+	useDogs();
+
 	const user = useSelector((state) => state.user);
 	const walks = user.walks || [];
-	const [isLoading, setIsLoading] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
-
-	const getDogs = async (humanId) => {
-		setIsLoading(true);
-		try {
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/dogs/mydogs/${humanId}`,
-			);
-			const data = await response.json();
-
-			if (data.result) {
-				dispatch(setDogs(data.dogs));
-			}
-		} catch (err) {
-			console.error(err);
-			setErrorMessage(err.message);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		getDogs(user.id);
-	}, [isFocused]);
 
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -60,7 +34,7 @@ export default function WelcomeScreen() {
 		);
 	});
 
-	const nbOfWalksToday = walksOfToday?.length;
+	const nbOfWalksToday = walksOfToday.length;
 
 	return (
 		<ScreenLayout justify="space-between" paddingVertical={80}>

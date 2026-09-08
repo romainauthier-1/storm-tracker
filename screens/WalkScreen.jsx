@@ -1,52 +1,19 @@
 import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { colors } from "../utils";
-import { setWalks } from "../reducers/user";
+import { useWalks } from "../hooks/useWalks";
 import FormModal from "../components/FormModal";
 import WalkCard from "../components/WalkCard";
 import { EmptyState, Fab, ScreenLayout } from "../components/ui";
 
 export default function WalkScreen() {
-	const dispatch = useDispatch();
-	const isFocused = useIsFocused();
-	const user = useSelector((state) => state.user);
-	const walks = user.walks;
-
-	const [isLoading, setIsLoading] = useState(false);
+	const { walks, isLoading } = useWalks();
 	const [isAddingWalk, setIsAddingWalk] = useState(false);
-
-	const getWalks = async (humanId) => {
-		setIsLoading(true);
-
-		try {
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/walks/${humanId}`,
-			);
-			const data = await response.json();
-
-			if (data.result) {
-				dispatch(setWalks(data.allWalks));
-				console.log("BALADES REÇUES : ", data.allWalks);
-			}
-		} catch (err) {
-			console.error(err);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		getWalks(user.id);
-	}, [isFocused]);
 
 	const walksDisplay = walks
 		.slice()
 		.reverse()
-		.map((walk, i) => {
-			return <WalkCard key={i} walk={walk} />;
-		});
+		.map((walk, i) => <WalkCard key={i} walk={walk} />);
 
 	return (
 		<ScreenLayout justify="center" style={styles.screen}>

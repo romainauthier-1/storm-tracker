@@ -14,6 +14,7 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { login } from "../reducers/user";
+import { authApi } from "../api";
 import { colors } from "../utils";
 import { fontSize, radius, shadows } from "../theme";
 import { Eye, EyeOff } from "lucide-react-native";
@@ -61,34 +62,20 @@ export default function LoginScreen() {
 
 		try {
 			setIsLoading(true);
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/humans/signin`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ email, password }),
-				},
+			const connectedUser = await authApi.signin({ email, password });
+			dispatch(
+				login({
+					id: connectedUser.id,
+					username: connectedUser.username,
+					dogs: connectedUser.dogs || [],
+					subscription: !!connectedUser.subscription,
+				}),
 			);
-
-			const data = await response.json();
-			// console.log("DATA: ", data);
-			if (data.result) {
-				dispatch(
-					login({
-						id: data.connectedUser.id,
-						username: data.connectedUser.username,
-						dogs: data.connectedUser.dogs || [],
-						subscription: data.connectedUser.subscription ? true : false,
-					}),
-				);
-				setEmail(null);
-				setPassword(null);
-			} else {
-				setErrorMessage(data.message || "Problème lors de la connexion.");
-			}
+			setEmail(null);
+			setPassword(null);
 		} catch (err) {
 			console.error(err);
-			setErrorMessage(err.message);
+			setErrorMessage(err.message || "Problème lors de la connexion.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -100,33 +87,21 @@ export default function LoginScreen() {
 
 		try {
 			setIsLoading(true);
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/humans/signup`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ username, email, password }),
-				},
+			const savedUser = await authApi.signup({ username, email, password });
+			dispatch(
+				login({
+					id: savedUser.id,
+					username: savedUser.username,
+					subscription: !!savedUser.subscription,
+					dogs: savedUser.dogs || [],
+				}),
 			);
-
-			const data = await response.json();
-			if (data.result) {
-				dispatch(
-					login({
-						id: data.savedUser.id,
-						username: data.savedUser.username,
-						subscription: data.savedUser.subscription ? true : false,
-						dogs: data.savedUser.dogs || [],
-					}),
-				);
-				setUsername(null);
-				setEmail(null);
-				setPassword(null);
-			} else {
-				setErrorMessage(data.message || "Problème lors de la connexion.");
-			}
+			setUsername(null);
+			setEmail(null);
+			setPassword(null);
 		} catch (err) {
-			console.error(err.message);
+			console.error(err);
+			setErrorMessage(err.message || "Problème lors de la connexion.");
 		} finally {
 			setIsLoading(false);
 		}
