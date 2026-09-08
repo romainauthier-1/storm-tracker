@@ -1,0 +1,8 @@
+node_modules
+dist
+.expo
+web-build
+coverage
+yarn.lock
+android
+ios

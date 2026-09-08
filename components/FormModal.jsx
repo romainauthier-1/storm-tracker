@@ -36,6 +36,14 @@ export default function FormModal({ type, isVisible, onClose }) {
 	const [dogRace2, setDogRace2] = useState("");
 	const [dogGender, setDogGender] = useState("");
 
+	const resetDogInputs = () => {
+		setDogName("");
+		setDogBirth(new Date());
+		setDogRace1("");
+		setDogRace2("");
+		setDogGender("");
+	};
+
 	const possibleGenders = ["Mâle", "Femelle", "Inconnu"];
 
 	const toggleGender = possibleGenders.map((option, i) => {
