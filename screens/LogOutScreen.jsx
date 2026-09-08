@@ -5,17 +5,14 @@ import {
 	Pressable,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../reducers/user";
 import { colors } from "../utils";
 import { capitalize } from "../utils";
+import { fontSize, radius, screenTitle } from "../theme";
 import { activateNotif } from "../reducers/user";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
 
 export default function LogOutScreen({ navigation, onActivatePush }) {
 	const dispatch = useDispatch();
@@ -88,10 +85,8 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background,
 	},
 	title: {
-		fontSize: 30,
+		...screenTitle,
 		color: colors.darkWhite,
-		fontWeight: "bold",
-		letterSpacing: 2,
 	},
 	logoutButton: {
 		display: "flex",
@@ -101,11 +96,11 @@ const styles = StyleSheet.create({
 		height: 100,
 		width: 210,
 		padding: 10,
-		borderRadius: 50,
+		borderRadius: radius.round,
 	},
 	text: {
 		color: colors.lightGray,
-		fontSize: 20,
+		fontSize: fontSize.xl,
 		fontWeight: "bold",
 	},
 	notif: {
@@ -114,7 +109,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 210,
 		height: 100,
-		borderRadius: 50,
+		borderRadius: radius.round,
 		padding: 10,
 		opacity: 0.5,
 	},

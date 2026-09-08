@@ -5,7 +5,6 @@ import {
 	Pressable,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	KeyboardAvoidingView,
 	Platform,
 	ActivityIndicator,
@@ -16,10 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { login } from "../reducers/user";
 import { colors } from "../utils";
+import { fontSize, radius, shadows } from "../theme";
 import { Eye, EyeOff } from "lucide-react-native";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
 
 export default function LoginScreen() {
 	const [username, setUsername] = useState(null);
@@ -268,8 +265,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: colors.primary,
-		width: screenWidth,
-		height: screenHeight,
 	},
 	header: {
 		justifyContent: "center",
@@ -294,18 +289,14 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 48,
 		width: "100%",
 		padding: 40,
-		minHeight: screenHeight * 0.6,
-		shadowColor: "#000",
-		shadowOffset: { width: 8, height: 0 },
-		shadowOpacity: 0.2,
-		shadowRadius: 12,
-		elevation: 8,
+		minHeight: "60%",
+		...shadows.card,
 	},
 	contentHeader: {
 		marginBottom: 32,
 	},
 	contentHeaderTitle: {
-		fontSize: 24,
+		fontSize: fontSize.xxl,
 		fontWeight: "bold",
 		color: colors.secondary,
 	},
@@ -327,9 +318,9 @@ const styles = StyleSheet.create({
 		paddingBottom: 8,
 		paddingLeft: 12,
 		paddingRight: 12,
-		borderRadius: 8,
+		borderRadius: radius.sm,
 		marginBottom: 8,
-		fontSize: 16,
+		fontSize: fontSize.md,
 	},
 	errorText: {
 		color: colors.destructive,
@@ -358,9 +349,9 @@ const styles = StyleSheet.create({
 		paddingBottom: 8,
 		paddingLeft: 12,
 		paddingRight: 12,
-		borderRadius: 8,
+		borderRadius: radius.sm,
 		marginBottom: 8,
-		fontSize: 16,
+		fontSize: fontSize.md,
 	},
 	passwordText: {
 		color: colors.white,

@@ -4,7 +4,6 @@ import {
 	Text,
 	StyleSheet,
 	TextInput,
-	Dimensions,
 	KeyboardAvoidingView,
 	Platform,
 	ActivityIndicator,
@@ -15,10 +14,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, capitalize } from "../utils";
+import { fontSize, screenTitle } from "../theme";
 import { setDogs, setWalks } from "../reducers/user";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
 
 export default function WelcomeScreen() {
 	const dispatch = useDispatch();
@@ -106,13 +103,11 @@ const styles = StyleSheet.create({
 		paddingVertical: 80,
 	},
 	title: {
-		fontSize: 30,
+		...screenTitle,
 		color: colors.darkWhite,
-		fontWeight: "bold",
-		letterSpacing: 2,
 	},
 	date: {
-		fontSize: 20,
+		fontSize: fontSize.xl,
 		color: colors.darkWhite,
 		fontWeight: "bold",
 		letterSpacing: 2,
