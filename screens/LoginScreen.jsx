@@ -1,6 +1,5 @@
 import {
 	View,
-	ScrollView,
 	Text,
 	Pressable,
 	StyleSheet,
@@ -8,11 +7,9 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	ActivityIndicator,
-	Keyboard,
 } from "react-native";
 import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 import { login } from "../reducers/user";
 import { authApi } from "../api";
 import { colors } from "../utils";
@@ -25,14 +22,10 @@ export default function LoginScreen() {
 	const [password, setPassword] = useState(null);
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
-	const [focus, setFocus] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSignup, setIsSignup] = useState(false);
 	const passwordRef = useRef(null);
 	const emailRef = useRef(null);
-	const isFocused = useIsFocused();
-
-	const user = useSelector((state) => state.user);
 
 	const dispatch = useDispatch();
 
@@ -145,8 +138,6 @@ export default function LoginScreen() {
 										returnKeyType="next"
 										autoCapitalize="words"
 										onSubmitEditing={() => emailRef.current?.focus()}
-										onFocus={() => setFocus("username")}
-										onBlur={() => setFocus(null)}
 									/>
 								</View>
 							</>
@@ -165,8 +156,6 @@ export default function LoginScreen() {
 								returnKeyType="next"
 								autoCapitalize="none"
 								onSubmitEditing={() => passwordRef.current?.focus()}
-								onFocus={() => setFocus("email")}
-								onBlur={() => setFocus(null)}
 							/>
 						</View>
 						<View>
@@ -182,8 +171,6 @@ export default function LoginScreen() {
 									secureTextEntry={!isPasswordVisible}
 									returnKeyType="done"
 									onSubmitEditing={handleLogin}
-									onFocus={() => setFocus("password")}
-									onBlur={() => setFocus(null)}
 									autoCapitalize="none"
 									autoCorrect={false}
 								/>

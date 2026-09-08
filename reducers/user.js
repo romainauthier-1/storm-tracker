@@ -20,12 +20,7 @@ const userSlice = createSlice({
 			state.isConnected = true;
 			state.notifActivated = action.payload.subscription;
 		},
-		logout: (state) => {
-			state.name = null;
-			state.token = null;
-			state.isConnected = false;
-			state.notifActivated = false;
-		},
+		logout: () => initialState,
 		activateNotif: (state, action) => {
 			state.notifActivated = action.payload;
 		},
