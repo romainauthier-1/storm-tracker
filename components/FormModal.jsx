@@ -14,6 +14,7 @@ import { showMessage } from "react-native-flash-message";
 import DateField from "./fields/DateField";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { dogsApi, walksApi } from "../api";
 import { colors, toLocalDateString, toLocalTimeString } from "../utils";
 import { fontSize, maxContentWidth, radius } from "../theme";
 import { XCircle } from "lucide-react-native";
@@ -76,43 +77,23 @@ export default function FormModal({ type, isVisible, onClose }) {
 			gender = "INCONNU";
 		}
 
-		// console.log("--- DONNÉES ENVOYÉES ---");
-		// console.log("ID HUMAIN : ", dogHumanId);
-		// console.log("NOM CHIEN : ", dogName);
-		// console.log("NAISSANCE CHIEN : ", dogBirth.toISOString().split("T")[0]);
-		// console.log("RACE 1 : ", dogRace1);
-		// console.log("RACE 2 : ", dogRace2);
-		// console.log("SEXE: ", gender);
 		try {
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/dogs/`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						name: dogName,
-						birth_date: toLocalDateString(dogBirth),
-						race1: dogRace1,
-						race2: dogRace2,
-						gender,
-						human: dogHumanId,
-					}),
-				},
-			);
-			const data = await response.json();
+			const data = await dogsApi.create({
+				name: dogName,
+				birth_date: toLocalDateString(dogBirth),
+				race1: dogRace1,
+				race2: dogRace2,
+				gender,
+				human: dogHumanId,
+			});
 
-			if (data.result) {
-				console.log(data.savedDog);
-				dispatch(addDog(data.savedDog));
-				showMessage({
-					message: data.message,
-					type: "success",
-				});
-				onClose();
-				resetDogInputs();
-			}
+			dispatch(addDog(data.savedDog));
+			showMessage({ message: data.message, type: "success" });
+			onClose();
+			resetDogInputs();
 		} catch (err) {
 			console.error(err);
+			showMessage({ message: err.message, type: "danger" });
 		} finally {
 			setIsLoading(false);
 		}
@@ -397,42 +378,28 @@ export default function FormModal({ type, isVisible, onClose }) {
 		setIsLoading(true);
 
 		try {
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/walks`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						walked_dog: dogId,
-						date: toLocalDateString(walkDate),
-						time: toLocalTimeString(walkTime),
-						duration: Number(walkDuration) || 0,
-						peed,
-						pooped,
-						notes,
-						walking_human: humanId,
-						dog_mood: dogMood,
-						human_mood: humanMood,
-						other,
-						coprophagie: coprophagie === "" ? null : coprophagie,
-					}),
-				},
-			);
+			const data = await walksApi.create({
+				walked_dog: dogId,
+				date: toLocalDateString(walkDate),
+				time: toLocalTimeString(walkTime),
+				duration: Number(walkDuration) || 0,
+				peed,
+				pooped,
+				notes,
+				walking_human: humanId,
+				dog_mood: dogMood,
+				human_mood: humanMood,
+				other,
+				coprophagie: coprophagie === "" ? null : coprophagie,
+			});
 
-			const data = await response.json();
-
-			if (data.result) {
-				// console.log("RETOUR ADD WALK : ", data.savedWalk);
-				showMessage({
-					message: data.message,
-					type: "success",
-				});
-				dispatch(addWalk(data.savedWalk));
-				onClose();
-				resetWalkInputs();
-			}
+			showMessage({ message: data.message, type: "success" });
+			dispatch(addWalk(data.savedWalk));
+			onClose();
+			resetWalkInputs();
 		} catch (err) {
 			console.error(err);
+			showMessage({ message: err.message, type: "danger" });
 		} finally {
 			setIsLoading(false);
 		}

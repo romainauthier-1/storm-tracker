@@ -1,6 +1,8 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { showMessage } from "react-native-flash-message";
 import { logout } from "../reducers/user";
+import { authApi } from "../api";
 import { colors, capitalize } from "../utils";
 import { fontSize, radius } from "../theme";
 import { ScreenLayout, ScreenTitle } from "../components/ui";
@@ -12,24 +14,13 @@ export default function LogOutScreen({ navigation, onActivatePush }) {
 
 	const handleLogOut = async (humanId) => {
 		try {
-			const response = await fetch(
-				`${process.env.EXPO_PUBLIC_BACKEND_URL}/humans/logout/${humanId}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ humanId }),
-				},
-			);
-			const data = await response.json();
-
-			if (data.result) {
-				dispatch(logout());
-				console.log(data.message);
-				console.log(data.offlineUser);
-			}
+			await authApi.logout(humanId);
 		} catch (err) {
+			// The server-side session may already be gone; log out locally anyway.
 			console.error(err);
 		}
+		dispatch(logout());
+		showMessage({ message: "À bientôt !", type: "success" });
 	};
 
 	return (
