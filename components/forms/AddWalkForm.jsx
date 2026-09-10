@@ -32,7 +32,7 @@ export default function AddWalkForm({ onClose }) {
 	const [dogMood, setDogMood] = useState([]);
 	const [humanMood, setHumanMood] = useState([]);
 	const [other, setOther] = useState([]);
-	const [coprophagie, setCoprophagie] = useState("");
+	const [coprophagie, setCoprophagie] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const needs = [peed && "peed", pooped && "pooped"].filter(Boolean);
@@ -70,7 +70,7 @@ export default function AddWalkForm({ onClose }) {
 				dog_mood: dogMood,
 				human_mood: humanMood,
 				other,
-				coprophagie: coprophagie === "" ? null : coprophagie,
+				coprophagie: coprophagie,
 			});
 			dispatch(addWalk(data.savedWalk));
 			showMessage({ message: data.message, type: "success" });

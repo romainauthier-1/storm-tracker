@@ -10,10 +10,7 @@ export default function WalkScreen() {
 	const { walks, isLoading } = useWalks();
 	const [isAddingWalk, setIsAddingWalk] = useState(false);
 
-	const walksDisplay = walks
-		.slice()
-		.reverse()
-		.map((walk, i) => <WalkCard key={i} walk={walk} />);
+	const walksDisplay = walks.map((walk, i) => <WalkCard key={i} walk={walk} />);
 
 	return (
 		<ScreenLayout justify="center" style={styles.screen}>
