@@ -34,7 +34,7 @@ export const HUMAN_MOOD_OPTIONS = [
 	"Normal",
 	"En forme",
 	"Motivé",
-	"Bonne composition",
+	"Détendu",
 ];
 
 export const OTHER_OPTIONS = [
