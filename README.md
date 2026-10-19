@@ -1,294 +1,80 @@
 # 🐕 Storm Tracker — Frontend
 
-> **Une application mobile pour suivre les balades de vos chiens** — Une interface React Native/Expo qui permet aux utilisateurs de gérer leurs chiens, leurs balades et de visualiser leurs statistiques.
+Application mobile et web (PWA) pour suivre les balades de ses chiens : qui a été promené, quand, combien de temps, et comment ça s'est passé.
+
+**Démo :** [storm-tracker-blush.vercel.app](https://storm-tracker-blush.vercel.app) · **API :** [storm-tracker-backend](https://github.com/romainauthier-1/storm-tracker-backend)
+
+[![CI](https://github.com/romainauthier-1/storm-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/romainauthier-1/storm-tracker/actions/workflows/ci.yml)
+![Expo](https://img.shields.io/badge/Expo-57-000020?logo=expo&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-0.86-61DAFB?logo=react&logoColor=black)
+![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-2-764ABC?logo=redux&logoColor=white)
 
 ---
 
-[![Expo](https://img.shields.io/badge/Expo-57.0.0-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
-[![React Native](https://img.shields.io/badge/React_Native-0.86.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
-[![Redux](https://img.shields.io/badge/Redux-2.11.2-764ABC?style=for-the-badge&logo=redux&logoColor=white)](https://redux.js.org/)
-[![React Navigation](https://img.shields.io/badge/React_Navigation-6-673AB7?style=for-the-badge)](https://reactnavigation.org/)
-[![Lucide React Native](https://img.shields.io/badge/Lucide_React_Native-1.7.0-3B82F6?style=for-the-badge)](https://lucide.dev/)
-[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge)](https://web.dev/progressive-web-apps/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+## Fonctionnalités
 
----
+- **Compte utilisateur** : inscription, connexion, déconnexion ; session conservée entre deux ouvertures de l'app
+- **Chiens** : liste de ses chiens, ajout (nom, date de naissance, sexe, races)
+- **Balades** : historique trié par date, ajout d'une balade avec date, heure, durée, chien promené, besoins, humeur du chien et de l'humain, notes
+- **Accueil** : date du jour et nombre de balades déjà faites aujourd'hui
+- **Multi-plateforme** : une seule base de code pour iOS, Android et le web (déployé en PWA installable)
 
-## 📜 À propos du projet
+## Stack technique
 
-**Storm Tracker Frontend** est une **application mobile cross-platform** développée avec **Expo** et **React Native**. Elle offre une expérience utilisateur immersive pour :
+| Domaine          | Choix                                                             |
+| ---------------- | ----------------------------------------------------------------- |
+| Framework        | Expo 57, React Native 0.86, React 19, react-native-web            |
+| État             | Redux Toolkit + redux-persist (AsyncStorage)                      |
+| Navigation       | React Navigation 6 (onglets + stack)                              |
+| UI               | Composants maison + design tokens (`theme/`), Lucide icons        |
+| Qualité          | ESLint, Prettier, Jest + Testing Library                          |
+| CI / Déploiement | GitHub Actions (lint, format, tests, build) · Vercel (export web) |
 
-- **Gérer vos chiens** – Ajouter, modifier, supprimer vos compagnons
-- **Enregistrer vos balades** – Suivre chaque promenade : date, durée, humeurs, besoins, notes
-- **Visualiser vos statistiques** – Voir l'historique de vos balades
-- **Naviguer facilement** – Interface intuitive avec onglets
-- **Recevoir des notifications** – Alertes pour les nouvelles fonctionnalités
+## Points techniques
 
-L'application est conçue pour être simple, rapide et agréable à utiliser au quotidien.
+- **Couche API unique** (`api/client.js`) : un seul point d'entrée `request()` qui préfixe l'URL du backend, gère le JSON, déballe l'enveloppe `{ result, message }` de l'API et lève une `ApiError` avec un message lisible par l'utilisateur. Les appels métier sont regroupés par domaine (`api/auth.js`, `dogs.js`, `walks.js`).
+- **Hooks d'écran** (`hooks/useDogs`, `useWalks`) : chargement et mise en cache dans le store, réutilisés d'un écran à l'autre.
+- **Design system léger** : primitives partagées (`Card`, `Field`, `ChipGroup`, `Fab`, `ScreenLayout`…) et tokens (couleurs, espacements, rayons, typographie).
+- **Composants spécifiques à la plateforme** : `DateField.jsx` / `DateField.web.jsx` pour un sélecteur de date natif sur mobile et HTML sur le web.
+- **Tests unitaires** sur les helpers de formatage, le client API et les composants UI.
 
----
+## Installation
 
-## 🔧 Stack Technique
+Prérequis : Node.js 18+, Yarn, et l'[API Storm Tracker](https://github.com/romainauthier-1/storm-tracker-backend) lancée en local (ou l'URL déployée).
 
-| Catégorie            | Technologie                                                                                             | Version | Rôle                                  |
-| -------------------- | ------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------- |
-| **Framework**        | [Expo](https://expo.dev/)                                                                               | 57.0.0  | Framework React Native                |
-| **Librairie UI**     | [React Native](https://reactnative.dev/)                                                                | 0.86.3  | Construction de l'interface mobile    |
-| **State Management** | [Redux Toolkit](https://redux-toolkit.js.org/)                                                          | 2.11.2  | Gestion centralisée de l'état         |
-| **Persistance**      | [Redux Persist](https://github.com/rt2zz/redux-persist)                                                 | 6.0.0   | Sauvegarde du state dans AsyncStorage |
-| **Navigation**       | [React Navigation](https://reactnavigation.org/)                                                        | 6       | Navigation entre écrans               |
-| **Icons**            | [Lucide React Native](https://lucide.dev/)                                                              | 1.7.0   | Bibliothèque d'icônes                 |
-| **Storage**          | [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)                             | 2.2.0   | Stockage local                        |
-| **DateTime Picker**  | [@react-native-community/datetimepicker](https://github.com/react-native-datetimepicker/datetimepicker) | 9.1.0   | Sélecteur de dates                    |
-| **Flash Messages**   | [react-native-flash-message](https://github.com/luggit/react-native-flash-message)                      | 0.4.2   | Notifications toast                   |
-| **PWA**              | [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)                   | -       | Notifications push                    |
-| **Déploiement**      | [Expo EAS](https://docs.expo.dev/eas/)                                                                  | -       | Build et déploiement                  |
-
----
-
-## ✨ Fonctionnalités
-
-### 📱 **Interface Mobile**
-
-- **Navigation par onglets** – Bottom Tab Navigator avec icônes personnalisées
-- **Design moderne** – Interface fluide et intuitive
-- **Responsive** – Adaptation à toutes les tailles d'écran
-- **Thème personnalisé** – Couleurs et styles cohérents
-- **Animations** – Transitions fluides entre les écrans
-
-### 👤 **Authentification**
-
-- **Connexion** – Formulaire de login avec validation
-- **Gestion de token** – Stockage sécurisé dans AsyncStorage
-- **État de connexion** – Maintien de la session
-- **Déconnexion** – Suppression du token
-
-### 🐕 **Gestion des Chiens**
-
-- **Liste des chiens** – Affichage de tous vos chiens
-- **Ajout de chien** – Formulaire pour ajouter un nouveau chien
-- **Détails du chien** – Visualisation des informations complètes
-- **Modification** – Édition des informations d'un chien
-- **Suppression** – Retrait d'un chien de votre liste
-
-### 🚶 **Gestion des Balades**
-
-- **Liste des balades** – Historique de toutes vos balades
-- **Ajout de balade** – Enregistrement d'une nouvelle promenade
-- **Détails de la balade** – Date, durée, humeurs, besoins, notes
-
-### 🎨 **Écrans**
-
-- **WelcomeScreen** – Écran d'accueil avec présentation
-- **LoginScreen** – Connexion à l'application
-- **DogScreen** – Liste et gestion des chiens
-- **WalkScreen** – Liste et gestion des balades
-- **LogOutScreen** – Déconnexion
-
-### 📝 **Composants**
-
-- **ui/** – primitives partagées (`Card`, `Fab`, `ChipGroup`, `Field`,
-  `ScreenLayout`, `EmptyState`, `ScreenTitle`)
-- **DogCard.jsx / WalkCard.jsx** – cartes chien / balade
-- **FormModal.jsx** – feuille d'ajout, routée vers `forms/AddDogForm` ou
-  `forms/AddWalkForm`
-
----
-
-## 🚀 Installation
-
-### Prérequis
-
-- [Node.js](https://nodejs.org/) (version 18 ou supérieure)
-- [Yarn](https://yarnpkg.com/) ou [npm](https://www.npmjs.com/)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/) (optionnel pour le développement)
-- [Storm Tracker Backend](https://github.com/dankysten/storm-tracker-backend) **en cours d'exécution**
-
-### Étapes
-
-1. **Cloner le dépôt**
-
-   ```bash
-   git clone https://github.com/dankysten/storm-tracker-frontend.git
-   cd storm-tracker-frontend
-   ```
-
-2. **Installer les dépendances**
-
-   ```bash
-   yarn install
-   # ou
-   npm install
-   ```
-
-3. **Configurer l'environnement**
-   Créer un fichier `.env` à la racine avec la variable suivante :
-
-   ```env
-   EXPO_PUBLIC_BACKEND_URL=http://localhost:3000
-   ```
-
-4. **Lancer l'application**
-
-   ```bash
-   # Mode développement
-   yarn start
-   # ou
-   npm start
-
-   # Sur Android
-   yarn android
-   # ou
-   npm run android
-
-   # Sur iOS
-   yarn ios
-   # ou
-   npm run ios
-
-   # Sur Web
-   yarn web
-   # ou
-   npm run web
-   ```
-
-5. **Accéder à l'application**
-   - Scannez le QR code avec l'application **Expo Go** (mobile)
-   - Ou ouvrez `http://localhost:19006` dans votre navigateur (web)
-
----
-
-## 📁 Structure du Projet
-
-Structure **plate** (pas de `src/`) :
-
-```
-storm-tracker-frontend/
-├── App.js                  # store + providers + navigation
-├── index.js                # registerRootComponent
-│
-├── api/                    # client HTTP unique + helpers par domaine
-│   ├── client.js           # request() : URL de base, JSON, contrat backend
-│   └── auth.js  dogs.js  walks.js
-├── hooks/                  # useDogs, useWalks — logique d'écran réutilisable
-├── lib/format.js           # helpers purs (dates, listes, libellés)
-├── theme/                  # design tokens (colors, spacing, radius, shadows…)
-├── constants/walk.js       # listes d'options des formulaires
-│
-├── components/
-│   ├── ui/                 # primitives (Card, Fab, ChipGroup, Field, …)
-│   ├── fields/             # DateField (+ .web.jsx)
-│   ├── forms/              # AddDogForm, AddWalkForm, OptionPickerModal
-│   └── DogCard.jsx  WalkCard.jsx  FormModal.jsx
-├── screens/                # LoginScreen, WelcomeScreen, DogScreen,
-│                           #   WalkScreen, LogOutScreen
-├── reducers/user.js        # slice Redux
-├── utils.js                # capitalize + toLocalDateString/TimeString
-├── __tests__/              # tests Jest
-│
-├── assets/  public/        # ressources statiques, template web / PWA
-└── app.json  vercel.json   # config Expo / déploiement
+```bash
+git clone https://github.com/romainauthier-1/storm-tracker.git
+cd storm-tracker
+yarn install
+cp .env.example .env    # renseigner EXPO_PUBLIC_BACKEND_URL
+yarn start              # puis : scanner le QR code avec Expo Go, ou touche "w" pour le web
 ```
 
-Voir [`conventions.md`](conventions.md) pour le détail.
+| Variable                  | Rôle                                       |
+| ------------------------- | ------------------------------------------ |
+| `EXPO_PUBLIC_BACKEND_URL` | URL de l'API (ex. `http://localhost:3000`) |
 
----
+| Script       | Rôle                          |
+| ------------ | ----------------------------- |
+| `yarn start` | serveur de dev Expo           |
+| `yarn web`   | lancement direct en web       |
+| `yarn test`  | tests Jest                    |
+| `yarn lint`  | ESLint                        |
+| `yarn build` | export web statique (`dist/`) |
 
-## 🔌 Configuration Backend
-
-L'application nécessite un backend fonctionnel. Par défaut, elle se connecte à :
+## Structure
 
 ```
-http://localhost:3000
+App.js            store Redux, providers, navigation
+api/              client HTTP + appels par domaine
+hooks/            useDogs, useWalks
+screens/          Welcome, Login, Dog, Walk, LogOut
+components/       ui/ (primitives), fields/, forms/, cartes chien / balade
+theme/            design tokens
+lib/ constants/   helpers purs, options des formulaires
+__tests__/        tests Jest
 ```
 
-**Pour utiliser un backend déployé :**
-
-1. Lancer le [Storm Tracker Backend](../backend/README.md) ou utiliser l'URL déployée
-2. Mettre à jour `.env` :
-   ```env
-   EXPO_PUBLIC_BACKEND_URL=https://storm-tracker-backend.vercel.app
-   ```
-
 ---
 
-## 🎨 Personnalisation
-
-### Thème
-
-Le thème principal est défini dans `utils.js` avec :
-
-- **Couleur primaire** : Définie dans les variables de couleur
-- **Couleur secondaire** : Utilisée pour la barre de navigation
-- **Couleurs des onglets** : Actif/inactif personnalisables
-
-Tu peux modifier ces valeurs pour adapter le thème à ton style.
-
-### Navigation
-
-La configuration de la barre de navigation est dans `App.js`. Tu peux y modifier :
-
-- Les onglets affichés
-- Les icônes utilisées (HeartHandshake, PawPrint, Footprints, SquareArrowRightExit)
-- Les couleurs de la barre
-- Les styles des labels
-
-### Carte des balades
-
-Le composant `WalkCard.jsx` affiche :
-
-- Date et heure de la balade
-- Durée
-- Besoins (pipi / caca)
-- Humeurs du chien et de l'humain, autres infos, coprophagie
-- Notes
-- Chien associé
-
----
-
-## 📱 Déploiement (PWA)
-
-### Avec Expo EAS
-
-1. Configurer `app.json` avec les bonnes informations
-2. Lancer le build :
-   ```bash
-   eas build --platform all
-   ```
-3. Déployer sur les stores ou comme PWA
-
-### En tant que PWA
-
-1. Builder l'application web :
-   ```bash
-   yarn web
-   ```
-2. Déployer le dossier `dist/` sur un hébergement statique (Vercel, Netlify, etc.)
-3. Configurer le **Service Worker** pour les notifications push
-
----
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-
-- **Ouvrir une issue** pour signaler un bug ou proposer une amélioration
-- **Forker le projet** et soumettre une Pull Request
-
----
-
-## 📜 Licence
-
-Ce projet est sous licence **[MIT](https://opensource.org/licenses/MIT)**.
-
----
-
-## 👤 Auteur
-
-📌 **Romain Authier**  
-📧 [dankysten](https://github.com/dankysten)  
-💼 Développeur Fullstack junior (et papa de Storm 🐾)
-
----
-
-> _"Marchez, respirez, profitez. Votre chien sait déjà comment faire."_ ✨
+Romain Authier — [GitHub](https://github.com/romainauthier-1)
