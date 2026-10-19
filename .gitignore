@@ -40,3 +40,12 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+# Yarn
+.yarn/install-state.gz
+
+# Notes et outillage locaux (non versionnés)
+.claude/
+CLAUDE.md
+CONTRIBUTING.md
+conventions.md
+CHANGELOG.md
